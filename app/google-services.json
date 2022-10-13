@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "880027823892",
+    "project_id": "note-app-103db",
+    "storage_bucket": "note-app-103db.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:880027823892:android:d80930bc1003ad5a6c9c01",
+        "android_client_info": {
+          "package_name": "com.seif.cleanarchitecturenoteappwithfirebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "880027823892-3opf6l5fa9e6kebvqgji0agpgh1c3q9f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.seif.cleanarchitecturenoteappwithfirebase",
+            "certificate_hash": "8dfdc0b2c34110c0421e60f60b0e27143cf9bc59"
+          }
+        },
+        {
+          "client_id": "880027823892-90iocbvp2f2ecqkp6udvle3j6onheeov.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIjTBhgpnyBsQxAhKparjC-zyGSEsnnM0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "880027823892-90iocbvp2f2ecqkp6udvle3j6onheeov.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
