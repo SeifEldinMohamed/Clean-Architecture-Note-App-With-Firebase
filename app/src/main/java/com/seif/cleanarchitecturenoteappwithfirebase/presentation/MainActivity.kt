@@ -7,7 +7,9 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.seif.cleanarchitecturenoteappwithfirebase.R
 import com.seif.cleanarchitecturenoteappwithfirebase.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
     lateinit var binding: ActivityMainBinding
