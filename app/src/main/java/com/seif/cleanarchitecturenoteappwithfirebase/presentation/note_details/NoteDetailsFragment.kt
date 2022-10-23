@@ -1,4 +1,4 @@
-package com.seif.cleanarchitecturenoteappwithfirebase
+package com.seif.cleanarchitecturenoteappwithfirebase.presentation.note_details
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -1,4 +1,4 @@
-package com.seif.cleanarchitecturenoteappwithfirebase
+package com.seif.cleanarchitecturenoteappwithfirebase.presentation.note_list
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

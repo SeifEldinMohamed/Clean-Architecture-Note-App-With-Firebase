@@ -1,6 +1,6 @@
-package com.seif.cleanarchitecturenoteappwithfirebase
+package com.seif.cleanarchitecturenoteappwithfirebase.data.remote.dto
 
-data class User(
+data class UserDto(
     val name: String,
     val email: String,
     val password: String,

@@ -1,10 +1,11 @@
-package com.seif.cleanarchitecturenoteappwithfirebase
+package com.seif.cleanarchitecturenoteappwithfirebase.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import com.seif.cleanarchitecturenoteappwithfirebase.R
 import com.seif.cleanarchitecturenoteappwithfirebase.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
