@@ -6,4 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {
     fun getNotes(): Flow<Resource<List<Note>, String>>
+
+    fun addNote(note:Note): Flow<Resource<String, String>>
 }
