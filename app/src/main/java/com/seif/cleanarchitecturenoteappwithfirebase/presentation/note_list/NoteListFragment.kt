@@ -12,6 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.seif.cleanarchitecturenoteappwithfirebase.databinding.FragmentNoteListBinding
+import com.seif.cleanarchitecturenoteappwithfirebase.presentation.note_list.adapter.NoteListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.*
 
@@ -20,6 +21,7 @@ class NoteListFragment : Fragment() {
     private val TAG = "NoteListFragment"
     private lateinit var binding: FragmentNoteListBinding
     private val noteListViewModel: NoteListViewModel by viewModels()
+    private val noteListAdapter: NoteListAdapter by lazy { NoteListAdapter() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,8 +37,15 @@ class NoteListFragment : Fragment() {
     }
 
     private fun observe() {
+        initRecyclerView()
         observeState()
         observeNotes()
+    }
+
+    private fun initRecyclerView() {
+        binding.rvNotes.apply {
+            adapter = noteListAdapter
+        }
     }
 
     private fun observeState() {
@@ -77,7 +86,7 @@ class NoteListFragment : Fragment() {
         noteListViewModel.notes
             .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.CREATED)
             .onEach {
-                Log.d(TAG, "observeNotes: data = $it")
+                noteListAdapter.addNotes(it)
             }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 

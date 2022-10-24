@@ -13,11 +13,14 @@ class NoteRepositoryImp @Inject constructor(
     private val firestore: FirebaseFirestore
 ) : NoteRepository {
     override fun getNotes() = flow {
-        val data = emptyList<NoteDto>()
-         if(data.isEmpty()){
+        val data = listOf(
+            NoteDto("1", "first note", "first note description", Date().toString()),
+            NoteDto("2", "second note", "second note description", Date().toString()),
+            NoteDto("3", "third note", "third note description", Date().toString())
+        )
+        if (data.isEmpty()) {
             emit(Resource.Error("Data is Empty"))
-        }
-        else {
+        } else {
             if (data.isNotEmpty())
                 emit(Resource.Success(data.map { it.toNote() }))
         }

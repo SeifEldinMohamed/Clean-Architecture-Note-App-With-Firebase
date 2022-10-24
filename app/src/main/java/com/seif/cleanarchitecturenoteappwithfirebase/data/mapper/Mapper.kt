@@ -9,6 +9,7 @@ fun NoteDto.toNote(): Note {
     return Note(
         id = this.id,
         title = this.title,
+        description = this.description,
         date = this.date
     )
 }

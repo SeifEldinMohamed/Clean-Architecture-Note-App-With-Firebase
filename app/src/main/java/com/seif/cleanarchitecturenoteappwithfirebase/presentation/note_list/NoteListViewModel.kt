@@ -1,6 +1,5 @@
 package com.seif.cleanarchitecturenoteappwithfirebase.presentation.note_list
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
@@ -32,7 +31,6 @@ class NoteListViewModel @Inject constructor(
     }
 
     private fun setLoading(isLoading: Boolean) {
-        Log.d(TAG, "setLoading: $isLoading")
         _state.value = NoteListFragmentState.IsLoading(isLoading)
     }
 
@@ -44,6 +42,7 @@ class NoteListViewModel @Inject constructor(
         setLoading(true)
         viewModelScope.launch(Dispatchers.IO) {
             getNotesUseCase()
+                .onStart { delay(1000L) } // to simulate network call
                 .collect { result ->
                 when (result) {
                     is Resource.Success -> {
