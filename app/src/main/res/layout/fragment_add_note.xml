@@ -45,4 +45,17 @@
         app:layout_constraintTop_toBottomOf="@+id/et_title_details"
         tools:ignore="TextContrastCheck" />
 
+    <Button
+        android:id="@+id/btn_add_note"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:text="Add Note"
+        app:layout_constraintEnd_toEndOf="@+id/et_description_details"
+        app:layout_constraintStart_toStartOf="@+id/et_description_details"
+        app:layout_constraintTop_toBottomOf="@+id/et_description_details"
+        tools:ignore="HardcodedText" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
