@@ -10,6 +10,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.seif.cleanarchitecturenoteappwithfirebase.R
 import com.seif.cleanarchitecturenoteappwithfirebase.databinding.FragmentAddNoteBinding
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.showSnackBar
@@ -56,7 +58,10 @@ class AddNoteFragment : Fragment() {
                     AddNoteFragmentState.Init -> Unit
                     is AddNoteFragmentState.IsLoading -> handleLoadingState(state.isLoading)
                     is AddNoteFragmentState.ShowError -> binding.root.showSnackBar(state.message)
-                    is AddNoteFragmentState.NoteId -> binding.root.showSnackBar("note created with id: ${state.noteId}")
+                    is AddNoteFragmentState.NoteId -> {
+                        binding.root.showSnackBar("note created with id: ${state.noteId}")
+                        findNavController().navigate(R.id.action_addNoteFragment_to_noteListFragment)
+                    }
                 }
             }.launchIn(lifecycleScope)
     }
