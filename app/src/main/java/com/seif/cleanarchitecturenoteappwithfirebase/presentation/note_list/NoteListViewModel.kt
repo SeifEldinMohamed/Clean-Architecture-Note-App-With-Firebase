@@ -1,5 +1,6 @@
 package com.seif.cleanarchitecturenoteappwithfirebase.presentation.note_list
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
@@ -26,9 +27,9 @@ class NoteListViewModel @Inject constructor(
     private val _notes = MutableStateFlow<List<Note>>(mutableListOf())
     val notes: StateFlow<List<Note>> = _notes
 
-    init {
-        getNotes()
-    }
+//    init {
+//        getNotes()
+//    }
 
     private fun setLoading(isLoading: Boolean) {
         _state.value = NoteListFragmentState.IsLoading(isLoading)
@@ -38,15 +39,15 @@ class NoteListViewModel @Inject constructor(
         _state.value = NoteListFragmentState.ShowError(message)
     }
 
-    private fun getNotes() {
-        setLoading(true)
+    fun getNotes() {
         viewModelScope.launch(Dispatchers.IO) {
             getNotesUseCase()
-                .onStart { delay(1000L) } // to simulate network call
+                .onStart { setLoading(true) } // to simulate network call
                 .collect { result ->
                 when (result) {
                     is Resource.Success -> {
                         setLoading(false)
+                        Log.d(TAG, "getNotes: ${result.data}")
                         _notes.value = result.data
                     }
                     is Resource.Error -> {

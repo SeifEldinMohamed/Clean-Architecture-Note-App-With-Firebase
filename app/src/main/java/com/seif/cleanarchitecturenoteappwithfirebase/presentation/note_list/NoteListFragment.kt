@@ -16,7 +16,9 @@ import com.seif.cleanarchitecturenoteappwithfirebase.R
 import com.seif.cleanarchitecturenoteappwithfirebase.databinding.FragmentNoteListBinding
 import com.seif.cleanarchitecturenoteappwithfirebase.presentation.note_list.adapter.NoteListAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class NoteListFragment : Fragment() {
@@ -35,6 +37,7 @@ class NoteListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        noteListViewModel.getNotes()
         observe()
         binding.fabAddNote.setOnClickListener {
             findNavController().navigate(R.id.action_noteListFragment_to_addNoteFragment)
@@ -79,11 +82,13 @@ class NoteListFragment : Fragment() {
     private fun handleLoading(isLoading: Boolean) {
         when (isLoading) {
             true -> {
+                // show loading progress circle
                 Log.d(TAG, "handleLoading: Loading...")
-            } // show loading progress circle
+            }
             false -> {
+                // hide loading progress circle
                 Log.d(TAG, "handleLoading: not loading")
-            }// hide loading progress circle
+            }
         }
     }
 
@@ -91,7 +96,11 @@ class NoteListFragment : Fragment() {
         noteListViewModel.notes
             .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.CREATED)
             .onEach {
-                noteListAdapter.addNotes(it)
+                if(it.isNotEmpty())
+                    noteListAdapter.addNotes(it)
+                else{
+                    Toast.makeText(requireContext(), "no notes yet!", Toast.LENGTH_SHORT).show()
+                }
             }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 

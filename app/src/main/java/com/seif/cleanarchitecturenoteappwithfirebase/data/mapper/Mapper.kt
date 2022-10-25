@@ -14,6 +14,15 @@ fun NoteDto.toNote(): Note {
     )
 }
 
+fun Note.toNoteDto(): NoteDto {
+    return NoteDto(
+        id = this.id,
+        title = this.title,
+        description = this.description,
+        date = this.date
+    )
+}
+
 fun UserDto.toUser(): User {
     return User(
         name = this.name,

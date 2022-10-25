@@ -1,20 +1,22 @@
 package com.seif.cleanarchitecturenoteappwithfirebase.data.repository
 
+
 import com.google.firebase.firestore.FirebaseFirestore
 import com.seif.cleanarchitecturenoteappwithfirebase.data.mapper.toNote
+import com.seif.cleanarchitecturenoteappwithfirebase.data.mapper.toNoteDto
 import com.seif.cleanarchitecturenoteappwithfirebase.data.remote.dto.NoteDto
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.repository.NoteRepository
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Constants
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Resource
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
 
 class NoteRepositoryImp @Inject constructor(
     private val firestore: FirebaseFirestore
 ) : NoteRepository {
-    override fun getNotes() = flow {
-        var response: Resource<List<Note>, String>? = null
+    override fun getNotes() = callbackFlow<Resource<List<Note>, String>> {
         firestore.collection(Constants.NOTES_COLLECTION)
             .get()
             .addOnSuccessListener {
@@ -23,33 +25,32 @@ class NoteRepositoryImp @Inject constructor(
                     val note = document.toObject(NoteDto::class.java)
                     notes.add(note)
                 }
-                response = Resource.Success(
-                    notes.map {noteDto ->
-                        noteDto.toNote()
-                    }
+                // Log.d("TAG", "getNotes: $notes")
+                trySend(
+                    Resource.Success(
+                        notes.map { noteDto ->
+                            noteDto.toNote()
+                        }
+                    )
                 )
             }
             .addOnFailureListener {
-                response = Resource.Error(it.message.toString())
+                trySend(Resource.Error(it.message.toString()))
             }
-        response?.let {
-            emit(it)
-        }
+        awaitClose {}
+
     }
 
-    override fun addNote(note: Note) = flow {
-        var response: Resource<String, String>? = null
+    override fun addNote(note: Note) = callbackFlow<Resource<String, String>> {
         firestore.collection(Constants.NOTES_COLLECTION)
-            .add(note)
+            .add(note.toNoteDto())
             .addOnSuccessListener {
-                response = Resource.Success(it.id)
+                trySend(Resource.Success("Note Added Successfully with id : ${it.id}"))
             }
             .addOnFailureListener {
-                response = Resource.Error(it.message.toString())
+                trySend(Resource.Error(it.message.toString()))
             }
-        response?.let {
-            emit(it)
-        }
+        awaitClose {}
     }
 }
 //        val data = listOf(

@@ -23,7 +23,7 @@
         tools:layout="@layout/fragment_note_details" />
     <fragment
         android:id="@+id/addNoteFragment"
-        android:name="com.seif.cleanarchitecturenoteappwithfirebase.AddNoteFragment"
+        android:name="com.seif.cleanarchitecturenoteappwithfirebase.presentation.add_note.AddNoteFragment"
         android:label="fragment_add_note"
         tools:layout="@layout/fragment_add_note" />
 </navigation>
