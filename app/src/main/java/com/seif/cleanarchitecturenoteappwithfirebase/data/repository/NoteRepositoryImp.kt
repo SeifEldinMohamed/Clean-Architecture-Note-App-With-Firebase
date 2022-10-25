@@ -3,6 +3,7 @@ package com.seif.cleanarchitecturenoteappwithfirebase.data.repository
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.seif.cleanarchitecturenoteappwithfirebase.data.mapper.toNote
 import com.seif.cleanarchitecturenoteappwithfirebase.data.mapper.toNoteDto
 import com.seif.cleanarchitecturenoteappwithfirebase.data.remote.dto.NoteDto
@@ -19,6 +20,7 @@ class NoteRepositoryImp @Inject constructor(
 ) : NoteRepository {
     override fun getNotes() = callbackFlow<Resource<List<Note>, String>> {
         firestore.collection(Constants.NOTES_COLLECTION)
+            .orderBy("date", Query.Direction.DESCENDING)
             .addSnapshotListener { value, error ->
                 if (error != null) {
                     Log.d("NoteRepositoryImp", "Listen failed: $error")

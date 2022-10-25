@@ -66,5 +66,5 @@ sealed class NoteListFragmentState {
     data class IsLoading(val isLoading: Boolean) : NoteListFragmentState()
     data class ShowToast(val message: String) : NoteListFragmentState()
     data class ShowError(val message: String) : NoteListFragmentState()
-    data class Notes(val notes:Pager<QuerySnapshot, Note>) : NoteListFragmentState()
+    data class Notes(val notes:List<Note>) : NoteListFragmentState()
 }
