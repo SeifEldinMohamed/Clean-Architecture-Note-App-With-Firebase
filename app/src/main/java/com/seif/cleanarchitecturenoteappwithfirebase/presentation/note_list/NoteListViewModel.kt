@@ -3,6 +3,9 @@ package com.seif.cleanarchitecturenoteappwithfirebase.presentation.note_list
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import com.google.firebase.firestore.QuerySnapshot
+import com.seif.cleanarchitecturenoteappwithfirebase.data.remote.dto.NoteDto
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.usecase.GetNotesUseCase
 import com.seif.cleanarchitecturenoteappwithfirebase.presentation.add_note.AddNoteFragmentState
@@ -45,7 +48,7 @@ class NoteListViewModel @Inject constructor(
                 when (result) {
                     is Resource.Success -> {
                         setLoading(false)
-                        Log.d(TAG, "getNotes: ${result.data}")
+                       // Log.d(TAG, "getNotes: ${result.data}")
                         _state.value = NoteListFragmentState.Notes(result.data)
                     }
                     is Resource.Error -> {
@@ -63,5 +66,5 @@ sealed class NoteListFragmentState {
     data class IsLoading(val isLoading: Boolean) : NoteListFragmentState()
     data class ShowToast(val message: String) : NoteListFragmentState()
     data class ShowError(val message: String) : NoteListFragmentState()
-    data class Notes(val notes:List<Note>) : NoteListFragmentState()
+    data class Notes(val notes:Pager<QuerySnapshot, Note>) : NoteListFragmentState()
 }

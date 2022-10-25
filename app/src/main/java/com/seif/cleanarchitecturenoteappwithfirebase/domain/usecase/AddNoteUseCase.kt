@@ -3,9 +3,7 @@ package com.seif.cleanarchitecturenoteappwithfirebase.domain.usecase
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.repository.NoteRepository
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Resource
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
 class AddNoteUseCase @Inject constructor(
