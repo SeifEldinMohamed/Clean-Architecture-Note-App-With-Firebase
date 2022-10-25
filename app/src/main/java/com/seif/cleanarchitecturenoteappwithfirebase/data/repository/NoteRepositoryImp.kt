@@ -1,6 +1,7 @@
 package com.seif.cleanarchitecturenoteappwithfirebase.data.repository
 
 
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.seif.cleanarchitecturenoteappwithfirebase.data.mapper.toNote
 import com.seif.cleanarchitecturenoteappwithfirebase.data.mapper.toNoteDto
@@ -18,25 +19,27 @@ class NoteRepositoryImp @Inject constructor(
 ) : NoteRepository {
     override fun getNotes() = callbackFlow<Resource<List<Note>, String>> {
         firestore.collection(Constants.NOTES_COLLECTION)
-            .get()
-            .addOnSuccessListener {
-                val notes = arrayListOf<NoteDto>()
-                for (document in it) {
-                    val note = document.toObject(NoteDto::class.java)
-                    notes.add(note)
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    Log.d("NoteRepositoryImp", "Listen failed: $error")
+                    return@addSnapshotListener
                 }
-                // Log.d("TAG", "getNotes: $notes")
-                trySend(
-                    Resource.Success(
-                        notes.map { noteDto ->
-                            noteDto.toNote()
-                        }
+                val notes = arrayListOf<NoteDto>()
+                if (value != null) {
+                    for (document in value) {
+                        val note = document.toObject(NoteDto::class.java)
+                        notes.add(note)
+                    }
+                    trySend(
+                        Resource.Success(
+                            notes.map { noteDto ->
+                                noteDto.toNote()
+                            }
+                        )
                     )
-                )
+                }
             }
-            .addOnFailureListener {
-                trySend(Resource.Error(it.message.toString()))
-            }
+
         awaitClose {}
 
     }
@@ -53,6 +56,31 @@ class NoteRepositoryImp @Inject constructor(
         awaitClose {}
     }
 }
+
+
+//        firestore.collection(Constants.NOTES_COLLECTION)
+//            .get()
+//            .addOnSuccessListener {
+//                val notes = arrayListOf<NoteDto>()
+//                for (document in it) {
+//                    val note = document.toObject(NoteDto::class.java)
+//                    notes.add(note)
+//                }
+//                // Log.d("TAG", "getNotes: $notes")
+//                trySend(
+//                    Resource.Success(
+//                        notes.map { noteDto ->
+//                            noteDto.toNote()
+//                        }
+//                    )
+//                )
+//            }
+//            .addOnFailureListener {
+//                trySend(Resource.Error(it.message.toString()))
+//            }
+
+
+
 //        val data = listOf(
 //            NoteDto("1", "first note", "first note description", Date().toString()),
 //            NoteDto("2", "second note", "second note description", Date().toString()),
@@ -64,3 +92,5 @@ class NoteRepositoryImp @Inject constructor(
 //            if (data.isNotEmpty())
 //                emit(Resource.Success(data.map { it.toNote() }))
 //        }
+
+

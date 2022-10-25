@@ -37,7 +37,7 @@ class NoteListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        noteListViewModel.getNotes()
+
         observe()
         binding.fabAddNote.setOnClickListener {
             findNavController().navigate(R.id.action_noteListFragment_to_addNoteFragment)
@@ -47,7 +47,6 @@ class NoteListFragment : Fragment() {
     private fun observe() {
         initRecyclerView()
         observeState()
-        observeNotes()
     }
 
     private fun initRecyclerView() {
@@ -76,6 +75,13 @@ class NoteListFragment : Fragment() {
             is NoteListFragmentState.ShowToast -> {
                 Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
             }
+            is NoteListFragmentState.Notes -> {
+                val notes = state.notes
+                if(notes.isNotEmpty())
+                    noteListAdapter.addNotes(notes)
+                else
+                    Toast.makeText(requireContext(), "no notes yet!", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -90,18 +96,6 @@ class NoteListFragment : Fragment() {
                 Log.d(TAG, "handleLoading: not loading")
             }
         }
-    }
-
-    private fun observeNotes() {
-        noteListViewModel.notes
-            .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.CREATED)
-            .onEach {
-                if(it.isNotEmpty())
-                    noteListAdapter.addNotes(it)
-                else{
-                    Toast.makeText(requireContext(), "no notes yet!", Toast.LENGTH_SHORT).show()
-                }
-            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
 }

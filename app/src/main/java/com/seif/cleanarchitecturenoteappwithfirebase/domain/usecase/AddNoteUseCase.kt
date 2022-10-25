@@ -27,10 +27,10 @@ class AddNoteUseCase @Inject constructor(
         } else if (note.title.length > 40) {
             Resource.Error("title is to0 long max char = 40")
         } else if (note.description.length < 20) {
-            Resource.Error("title is too short min char = 20")
+            Resource.Error("description is too short min char = 20")
 
-        } else if (note.description.length > 100) { // to long ""
-            Resource.Error("title is to0 long max char = 100")
+        } else if (note.description.length > 200) { // to long ""
+            Resource.Error("description is too long max char = 200")
         } else {
             Resource.Success("valid note")
         }

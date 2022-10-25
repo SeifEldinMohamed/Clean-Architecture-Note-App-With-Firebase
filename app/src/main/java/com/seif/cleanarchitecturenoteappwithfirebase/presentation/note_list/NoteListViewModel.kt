@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.usecase.GetNotesUseCase
+import com.seif.cleanarchitecturenoteappwithfirebase.presentation.add_note.AddNoteFragmentState
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -24,12 +25,9 @@ class NoteListViewModel @Inject constructor(
     private val _state = MutableStateFlow<NoteListFragmentState>(NoteListFragmentState.Init)
     val state: StateFlow<NoteListFragmentState> get() = _state
 
-    private val _notes = MutableStateFlow<List<Note>>(mutableListOf())
-    val notes: StateFlow<List<Note>> = _notes
-
-//    init {
-//        getNotes()
-//    }
+    init {
+        getNotes()
+    }
 
     private fun setLoading(isLoading: Boolean) {
         _state.value = NoteListFragmentState.IsLoading(isLoading)
@@ -48,7 +46,7 @@ class NoteListViewModel @Inject constructor(
                     is Resource.Success -> {
                         setLoading(false)
                         Log.d(TAG, "getNotes: ${result.data}")
-                        _notes.value = result.data
+                        _state.value = NoteListFragmentState.Notes(result.data)
                     }
                     is Resource.Error -> {
                         setLoading(false)
@@ -65,4 +63,5 @@ sealed class NoteListFragmentState {
     data class IsLoading(val isLoading: Boolean) : NoteListFragmentState()
     data class ShowToast(val message: String) : NoteListFragmentState()
     data class ShowError(val message: String) : NoteListFragmentState()
+    data class Notes(val notes:List<Note>) : NoteListFragmentState()
 }

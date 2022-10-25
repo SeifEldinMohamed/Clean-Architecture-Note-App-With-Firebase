@@ -21,9 +21,6 @@ class AddNoteViewModel @Inject constructor(
     private val _state = MutableStateFlow<AddNoteFragmentState>(AddNoteFragmentState.Init)
     val state: StateFlow<AddNoteFragmentState> = _state
 
-    private val _noteId = MutableStateFlow<String>("")
-    val noteId: StateFlow<String> = _noteId
-
     private fun showError(message:String) {
         _state.value = AddNoteFragmentState.ShowError(message)
     }
@@ -46,7 +43,7 @@ class AddNoteViewModel @Inject constructor(
                     }
                     is Resource.Success -> {
                         setLoading(false)
-                        _noteId.value = it.data
+                        _state.value = AddNoteFragmentState.NoteId(it.data)
                     }
                 }
             }

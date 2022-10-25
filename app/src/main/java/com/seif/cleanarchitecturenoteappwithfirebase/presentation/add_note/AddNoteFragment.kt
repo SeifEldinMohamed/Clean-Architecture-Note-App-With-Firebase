@@ -45,16 +45,8 @@ class AddNoteFragment : Fragment() {
 
     private fun observe() {
         observeState()
-        observeNoteId()
     }
 
-    private fun observeNoteId() {
-        addNoteViewModel.noteId
-            .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.CREATED)
-            .onEach { noteId ->
-                binding.root.showSnackBar(noteId)
-            }.launchIn(lifecycleScope)
-    }
 
     private fun observeState() {
         addNoteViewModel.state
@@ -64,6 +56,7 @@ class AddNoteFragment : Fragment() {
                     AddNoteFragmentState.Init -> Unit
                     is AddNoteFragmentState.IsLoading -> handleLoadingState(state.isLoading)
                     is AddNoteFragmentState.ShowError -> binding.root.showSnackBar(state.message)
+                    is AddNoteFragmentState.NoteId -> binding.root.showSnackBar("note created with id: ${state.noteId}")
                 }
             }.launchIn(lifecycleScope)
     }
