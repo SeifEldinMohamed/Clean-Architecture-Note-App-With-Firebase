@@ -25,9 +25,5 @@
         android:id="@+id/addNoteFragment"
         android:name="com.seif.cleanarchitecturenoteappwithfirebase.presentation.add_note.AddNoteFragment"
         android:label="fragment_add_note"
-        tools:layout="@layout/fragment_add_note" >
-        <action
-            android:id="@+id/action_addNoteFragment_to_noteListFragment"
-            app:destination="@id/noteListFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_add_note" />
 </navigation>

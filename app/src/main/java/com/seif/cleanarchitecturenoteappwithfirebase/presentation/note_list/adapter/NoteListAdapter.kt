@@ -13,7 +13,6 @@ class NoteListAdapter : RecyclerView.Adapter<NoteListAdapter.MyViewHolder>() {
             fun bind(note: Note) {
                 binding.tvTitleNote.text = note.title
                 binding.tvDescriptionNote.text = note.description
-                binding.tvDate.text = note.date.toString()
             }
     }
 
