@@ -1,14 +1,9 @@
 package com.seif.cleanarchitecturenoteappwithfirebase.presentation.note_list
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import com.google.firebase.firestore.QuerySnapshot
-import com.seif.cleanarchitecturenoteappwithfirebase.data.remote.dto.NoteDto
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.usecase.GetNotesUseCase
-import com.seif.cleanarchitecturenoteappwithfirebase.presentation.add_note.AddNoteFragmentState
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -43,11 +38,13 @@ class NoteListViewModel @Inject constructor(
     fun getNotes() {
         viewModelScope.launch(Dispatchers.IO) {
             getNotesUseCase()
-                .onStart { setLoading(true) } // to simulate network call
+                .onStart { setLoading(true)
+                delay(300L)} // to simulate network call
                 .collect { result ->
                 when (result) {
                     is Resource.Success -> {
                         setLoading(false)
+                        delay(200L)
                        // Log.d(TAG, "getNotes: ${result.data}")
                         _state.value = NoteListFragmentState.Notes(result.data)
                     }

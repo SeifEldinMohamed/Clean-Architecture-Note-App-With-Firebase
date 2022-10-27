@@ -14,6 +14,7 @@ fun NoteDto.toNote(): Note {
     )
 }
 
+
 fun Note.toNoteDto(): NoteDto {
     return NoteDto(
         id = this.id,
