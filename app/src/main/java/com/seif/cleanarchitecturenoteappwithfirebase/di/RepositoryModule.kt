@@ -1,7 +1,7 @@
 package com.seif.cleanarchitecturenoteappwithfirebase.di
 
+import NoteRepositoryImp
 import com.google.firebase.firestore.FirebaseFirestore
-import com.seif.cleanarchitecturenoteappwithfirebase.data.repository.NoteRepositoryImp
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.repository.NoteRepository
 import dagger.Module
 import dagger.Provides
