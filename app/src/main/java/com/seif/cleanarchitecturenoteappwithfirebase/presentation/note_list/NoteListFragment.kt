@@ -7,17 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.seif.cleanarchitecturenoteappwithfirebase.R
 import com.seif.cleanarchitecturenoteappwithfirebase.databinding.FragmentNoteListBinding
-import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
 import com.seif.cleanarchitecturenoteappwithfirebase.presentation.note_list.adapter.NoteListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +26,7 @@ class NoteListFragment : Fragment() {
     private lateinit var binding: FragmentNoteListBinding
     private val noteListViewModel: NoteListViewModel by viewModels()
     private val noteListAdapter: NoteListAdapter by lazy { NoteListAdapter() }
-    private lateinit var notes: List<Note>
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,7 +42,6 @@ class NoteListFragment : Fragment() {
         binding.fabAddNote.setOnClickListener {
             findNavController().navigate(R.id.action_noteListFragment_to_addNoteFragment)
         }
-
     }
 
     private fun observe() {
@@ -81,7 +76,7 @@ class NoteListFragment : Fragment() {
                 Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
             }
             is NoteListFragmentState.Notes -> {
-                notes = state.notes
+                val notes = state.notes
                 if(notes.isNotEmpty())
                     noteListAdapter.addNotes(notes)
                 else
@@ -94,12 +89,10 @@ class NoteListFragment : Fragment() {
         when (isLoading) {
             true -> {
                 // show loading progress circle
-                binding.progressBar.visibility = View.VISIBLE
                 Log.d(TAG, "handleLoading: Loading...")
             }
             false -> {
                 // hide loading progress circle
-                binding.progressBar.visibility = View.GONE
                 Log.d(TAG, "handleLoading: not loading")
             }
         }

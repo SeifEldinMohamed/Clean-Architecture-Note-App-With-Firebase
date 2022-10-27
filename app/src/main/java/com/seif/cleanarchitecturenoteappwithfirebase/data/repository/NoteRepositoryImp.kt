@@ -10,7 +10,6 @@ import com.seif.cleanarchitecturenoteappwithfirebase.data.remote.dto.NoteDto
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.repository.NoteRepository
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Constants
-import com.seif.cleanarchitecturenoteappwithfirebase.utils.Constants.Companion.PAGE_SIZE
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Resource
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
