@@ -3,13 +3,24 @@ package com.seif.cleanarchitecturenoteappwithfirebase.presentation.note_list.ada
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.seif.cleanarchitecturenoteappwithfirebase.databinding.ItemNoteBinding
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.MyDiffUtil
 
-class NoteListAdapter : RecyclerView.Adapter<NoteListAdapter.MyViewHolder>() {
-     private var notes: List<Note> = emptyList()
+class NoteListAdapter : ListAdapter<Note, NoteListAdapter.MyViewHolder>(Companion) {
+ //    private var notes: List<Note> = emptyList()
+
+ companion object : DiffUtil.ItemCallback<Note>() {
+     override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean {
+         return oldItem == newItem
+     }
+
+     override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean {
+         return oldItem == newItem
+     }
+ }
 
     class MyViewHolder(private val binding: ItemNoteBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -31,25 +42,25 @@ class NoteListAdapter : RecyclerView.Adapter<NoteListAdapter.MyViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(notes[position])
+        holder.bind(getItem(position))
     }
 
-       override fun getItemCount() = notes.size
+    //   override fun getItemCount() = notes.size
 
-    companion object : DiffUtil.ItemCallback<Note>() {
-        override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean {
-            return oldItem.id == newItem.id
-        }
+//    companion object : DiffUtil.ItemCallback<Note>() {
+//        override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean {
+//            return oldItem.id == newItem.id
+//        }
+//
+//        override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean {
+//            return oldItem == newItem
+//        }
+//    }
 
-        override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean {
-            return oldItem == newItem
-        }
-    }
-
-    fun addNotes(newNotes: List<Note>) {
-        val diffUtilCallback = MyDiffUtil<Note>(this.notes, newNotes)
-        val result = DiffUtil.calculateDiff(diffUtilCallback)
-        this.notes = newNotes
-        result.dispatchUpdatesTo(this)
-    }
+//    fun addNotes(newNotes: List<Note>) {
+//        val diffUtilCallback = MyDiffUtil<Note>(this.notes, newNotes)
+//        val result = DiffUtil.calculateDiff(diffUtilCallback)
+//        this.notes = newNotes
+//        result.dispatchUpdatesTo(this)
+//    }
 }

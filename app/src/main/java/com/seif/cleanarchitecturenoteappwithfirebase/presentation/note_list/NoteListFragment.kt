@@ -16,6 +16,8 @@ import com.seif.cleanarchitecturenoteappwithfirebase.R
 import com.seif.cleanarchitecturenoteappwithfirebase.databinding.FragmentNoteListBinding
 import com.seif.cleanarchitecturenoteappwithfirebase.presentation.note_list.adapter.NoteListAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import jp.wasabeef.recyclerview.animators.LandingAnimator
+import jp.wasabeef.recyclerview.animators.SlideInDownAnimator
 import kotlinx.coroutines.flow.*
 
 @AndroidEntryPoint
@@ -50,6 +52,7 @@ class NoteListFragment : Fragment() {
     private fun initRecyclerView() {
         binding.rvNotes.apply {
             adapter = noteListAdapter
+            itemAnimator = LandingAnimator()
         }
     }
 
@@ -76,7 +79,7 @@ class NoteListFragment : Fragment() {
             is NoteListFragmentState.Notes -> {
                 val notes = state.notes
                 if(notes.isNotEmpty())
-                    noteListAdapter.addNotes(notes)
+                    noteListAdapter.submitList(notes)
                 else
                     Toast.makeText(requireContext(), "no notes yet!", Toast.LENGTH_SHORT).show()
             }
