@@ -1,14 +1,15 @@
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
+package com.seif.cleanarchitecturenoteappwithfirebase.data.repository
+
+
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.QuerySnapshot
+import com.seif.cleanarchitecturenoteappwithfirebase.data.mapper.toNote
 import com.seif.cleanarchitecturenoteappwithfirebase.data.mapper.toNoteDto
-import com.seif.cleanarchitecturenoteappwithfirebase.data.remote.FirestorePagingSource
+import com.seif.cleanarchitecturenoteappwithfirebase.data.remote.dto.NoteDto
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.repository.NoteRepository
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Constants
-import com.seif.cleanarchitecturenoteappwithfirebase.utils.Constants.Companion.PAGE_SIZE
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Resource
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
@@ -17,44 +18,31 @@ import javax.inject.Inject
 class NoteRepositoryImp @Inject constructor(
     private val firestore: FirebaseFirestore
 ) : NoteRepository {
-    override fun getNotes() = callbackFlow<Resource<Pager<QuerySnapshot, Note>, String>> {
-        trySend(
-            Resource.Success(
-                Pager(
-                    PagingConfig(
-                        pageSize = PAGE_SIZE
-                    )
-                ){
-                    FirestorePagingSource(firestore.collection(Constants.NOTES_COLLECTION)
-                        .orderBy("date", Query.Direction.DESCENDING).limit(PAGE_SIZE.toLong()))
+    override fun getNotes() = callbackFlow<Resource<List<Note>, String>> {
+        firestore.collection(Constants.NOTES_COLLECTION)
+            .orderBy("date", Query.Direction.DESCENDING)
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    Log.d("NoteRepositoryImp", "Listen failed: $error")
+                    return@addSnapshotListener
                 }
-            )
-        )
+                val notes = arrayListOf<NoteDto>()
+                if (value != null) {
+                    for (document in value) {
+                        val note = document.toObject(NoteDto::class.java)
+                        notes.add(note)
+                    }
+                    Log.d("Note","retrieved notes ${notes.size} = $notes")
+                    trySend(
+                        Resource.Success(
+                            notes.map { noteDto ->
+                                noteDto.toNote()
+                            }
+                        )
+                    )
+                }
+            }
 
-
-//        firestore.collection(Constants.NOTES_COLLECTION)
-//            .orderBy("date", Query.Direction.DESCENDING).limit(PAGE_SIZE.toLong())
-//            .addSnapshotListener { value, error ->
-//                if (error != null) {
-//                    Log.d("NoteRepositoryImp", "Listen failed: $error")
-//                    return@addSnapshotListener
-//                }
-//                val notes = arrayListOf<NoteDto>()
-//                if (value != null) {
-//                    for (document in value) {
-//                        val note = document.toObject(NoteDto::class.java)
-//                        notes.add(note)
-//                    }
-//                    trySend(
-//                        Resource.Success(
-//                            notes.map { noteDto ->
-//                                noteDto.toNote()
-//                            }
-//                        )
-//                    )
-//                }
-//            }
-//
         awaitClose {}
 
     }
@@ -107,3 +95,5 @@ class NoteRepositoryImp @Inject constructor(
 //            if (data.isNotEmpty())
 //                emit(Resource.Success(data.map { it.toNote() }))
 //        }
+
+

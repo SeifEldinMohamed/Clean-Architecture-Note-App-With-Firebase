@@ -45,18 +45,18 @@ class NoteListViewModel @Inject constructor(
             getNotesUseCase()
                 .onStart { setLoading(true) } // to simulate network call
                 .collect { result ->
-                    when (result) {
-                        is Resource.Success -> {
-                            setLoading(false)
-                            // Log.d(TAG, "getNotes: ${result.data}")
-                            _state.value = NoteListFragmentState.Notes(result.data)
-                        }
-                        is Resource.Error -> {
-                            setLoading(false)
-                            showError(result.message)
-                        }
+                when (result) {
+                    is Resource.Success -> {
+                        setLoading(false)
+                       // Log.d(TAG, "getNotes: ${result.data}")
+                        _state.value = NoteListFragmentState.Notes(result.data)
+                    }
+                    is Resource.Error -> {
+                        setLoading(false)
+                        showError(result.message)
                     }
                 }
+            }
         }
     }
 }
@@ -66,5 +66,5 @@ sealed class NoteListFragmentState {
     data class IsLoading(val isLoading: Boolean) : NoteListFragmentState()
     data class ShowToast(val message: String) : NoteListFragmentState()
     data class ShowError(val message: String) : NoteListFragmentState()
-    data class Notes(val notes:Pager<QuerySnapshot, Note>) : NoteListFragmentState()
+    data class Notes(val notes:List<Note>) : NoteListFragmentState()
 }

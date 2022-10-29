@@ -2,14 +2,14 @@ package com.seif.cleanarchitecturenoteappwithfirebase.presentation.note_list.ada
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.seif.cleanarchitecturenoteappwithfirebase.databinding.ItemNoteBinding
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
+import com.seif.cleanarchitecturenoteappwithfirebase.utils.MyDiffUtil
 
-class NoteListAdapter : PagingDataAdapter<Note, NoteListAdapter.MyViewHolder>(Companion) {
-    // private var notes: List<Note> = emptyList()
+class NoteListAdapter : RecyclerView.Adapter<NoteListAdapter.MyViewHolder>() {
+     private var notes: List<Note> = emptyList()
 
     class MyViewHolder(private val binding: ItemNoteBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -31,10 +31,10 @@ class NoteListAdapter : PagingDataAdapter<Note, NoteListAdapter.MyViewHolder>(Co
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(getItem(position) ?: return)
+        holder.bind(notes[position])
     }
 
-    //   override fun getItemCount() = notes.size
+       override fun getItemCount() = notes.size
 
     companion object : DiffUtil.ItemCallback<Note>() {
         override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean {
@@ -46,8 +46,10 @@ class NoteListAdapter : PagingDataAdapter<Note, NoteListAdapter.MyViewHolder>(Co
         }
     }
 
-//    fun addNotes(newNotes: List<Note>) {
-//        this.notes = newNotes
-//        notifyDataSetChanged()
-//    }
+    fun addNotes(newNotes: List<Note>) {
+        val diffUtilCallback = MyDiffUtil<Note>(this.notes, newNotes)
+        val result = DiffUtil.calculateDiff(diffUtilCallback)
+        this.notes = newNotes
+        result.dispatchUpdatesTo(this)
+    }
 }
