@@ -60,7 +60,7 @@ class AddNoteFragment : Fragment() {
                     is AddNoteFragmentState.ShowError -> binding.root.showSnackBar(state.message)
                     is AddNoteFragmentState.NoteId -> {
                         binding.root.showSnackBar("note created with id: ${state.noteId}")
-                        findNavController().navigate(R.id.action_addNoteFragment_to_noteListFragment)
+                      //  findNavController().navigate(R.id.action_addNoteFragment_to_noteListFragment)
                     }
                 }
             }.launchIn(lifecycleScope)
@@ -70,9 +70,11 @@ class AddNoteFragment : Fragment() {
         when (isLoading) {
             true -> {
                 Log.d(TAG, "handleLoadingState: Loading..")
+                binding.progressBarAdd.visibility = View.VISIBLE
             } // show loading progress
             false -> {
                 Log.d(TAG, "handleLoadingState: Finish Loading !")
+                binding.progressBarAdd.visibility = View.GONE
             } // hide loading progress
         }
     }

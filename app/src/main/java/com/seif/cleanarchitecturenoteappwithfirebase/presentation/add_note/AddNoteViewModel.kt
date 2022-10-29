@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,18 +33,22 @@ class AddNoteViewModel @Inject constructor(
     }
 
     fun addNote(note: Note) {
+        setLoading(true)
         viewModelScope.launch(Dispatchers.IO) {
             addNoteUseCase(note)
-                .onStart { setLoading(true) }
                 .collect {
                 when(it) {
                     is Resource.Error -> {
-                        setLoading(false)
-                        showError(it.message)
+                        withContext(Dispatchers.Main) {
+                            setLoading(false)
+                            showError(it.message)
+                        }
                     }
                     is Resource.Success -> {
-                        setLoading(false)
-                        _state.value = AddNoteFragmentState.NoteId(it.data)
+                        withContext(Dispatchers.Main) {
+                            setLoading(false)
+                            _state.value = AddNoteFragmentState.NoteId(it.data)
+                        }
                     }
                 }
             }

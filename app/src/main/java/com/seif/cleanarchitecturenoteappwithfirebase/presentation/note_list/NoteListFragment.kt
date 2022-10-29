@@ -17,7 +17,6 @@ import com.seif.cleanarchitecturenoteappwithfirebase.databinding.FragmentNoteLis
 import com.seif.cleanarchitecturenoteappwithfirebase.presentation.note_list.adapter.NoteListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.recyclerview.animators.LandingAnimator
-import jp.wasabeef.recyclerview.animators.SlideInDownAnimator
 import kotlinx.coroutines.flow.*
 
 @AndroidEntryPoint
@@ -57,13 +56,11 @@ class NoteListFragment : Fragment() {
     }
 
     private fun observeState() {
-        noteListViewModel.state
-            .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.CREATED)
-            .onEach { state ->
-                handleState(state)
-            }
-            .launchIn(viewLifecycleOwner.lifecycleScope)
-
+            noteListViewModel.state
+                .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.CREATED)
+                .onEach { state ->
+                    handleState(state)
+                }.launchIn(lifecycleScope)
     }
 
     private fun handleState(state: NoteListFragmentState) {
@@ -77,6 +74,7 @@ class NoteListFragment : Fragment() {
                 Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
             }
             is NoteListFragmentState.Notes -> {
+                Log.d(TAG, "handleState: notes: ${state.notes}")
                 val notes = state.notes
                 if(notes.isNotEmpty())
                     noteListAdapter.submitList(notes)
@@ -91,10 +89,12 @@ class NoteListFragment : Fragment() {
             true -> {
                 // show loading progress circle
                 Log.d(TAG, "handleLoading: Loading...")
+                binding.progressBar.visibility = View.VISIBLE
             }
             false -> {
                 // hide loading progress circle
                 Log.d(TAG, "handleLoading: not loading")
+                binding.progressBar.visibility = View.GONE
             }
         }
     }

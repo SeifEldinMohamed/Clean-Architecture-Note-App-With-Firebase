@@ -1,22 +1,16 @@
 package com.seif.cleanarchitecturenoteappwithfirebase.presentation.note_list
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import com.google.firebase.firestore.QuerySnapshot
-import com.seif.cleanarchitecturenoteappwithfirebase.data.remote.dto.NoteDto
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.usecase.GetNotesUseCase
-import com.seif.cleanarchitecturenoteappwithfirebase.presentation.add_note.AddNoteFragmentState
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,20 +34,24 @@ class NoteListViewModel @Inject constructor(
         _state.value = NoteListFragmentState.ShowError(message)
     }
 
-    fun getNotes() {
+    private fun getNotes() {
+        setLoading(true)
         viewModelScope.launch(Dispatchers.IO) {
             getNotesUseCase()
-                .onStart { setLoading(true) } // to simulate network call
                 .collect { result ->
                 when (result) {
                     is Resource.Success -> {
-                        setLoading(false)
-                       // Log.d(TAG, "getNotes: ${result.data}")
-                        _state.value = NoteListFragmentState.Notes(result.data)
+                        withContext(Dispatchers.Main) {
+                            setLoading(false)
+                            // Log.d(TAG, "getNotes: ${result.data}")
+                            _state.value = NoteListFragmentState.Notes(result.data)
+                        }
                     }
                     is Resource.Error -> {
-                        setLoading(false)
-                        showError(result.message)
+                        withContext(Dispatchers.Main) {
+                            setLoading(false)
+                            showError(result.message)
+                        }
                     }
                 }
             }
