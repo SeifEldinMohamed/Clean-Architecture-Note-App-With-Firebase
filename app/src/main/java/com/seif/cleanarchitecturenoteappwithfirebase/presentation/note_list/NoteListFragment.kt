@@ -14,13 +14,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.seif.cleanarchitecturenoteappwithfirebase.R
 import com.seif.cleanarchitecturenoteappwithfirebase.databinding.FragmentNoteListBinding
+import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
 import com.seif.cleanarchitecturenoteappwithfirebase.presentation.note_list.adapter.NoteListAdapter
+import com.seif.cleanarchitecturenoteappwithfirebase.utils.OnItemClickRecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.recyclerview.animators.LandingAnimator
 import kotlinx.coroutines.flow.*
 
 @AndroidEntryPoint
-class NoteListFragment : Fragment() {
+class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
     private val TAG = "NoteListFragment"
     private lateinit var binding: FragmentNoteListBinding
     private val noteListViewModel: NoteListViewModel by viewModels()
@@ -97,6 +99,29 @@ class NoteListFragment : Fragment() {
                 binding.progressBar.visibility = View.GONE
             }
         }
+    }
+
+    override fun onEditItemClick(item: Note) {
+        // go to details fragment to edit note
+        findNavController().navigate(R.id.action_noteListFragment_to_noteDetailsFragment,Bundle().apply {
+            putString("type", "edit")
+        })
+        Log.d(TAG, "onEditItemClick: edit clicked")
+    }
+
+    override fun onDeleteItemClick(item: Note) {
+        // delete note
+        Log.d(TAG, "onDeleteItemClick: delete clicked")
+
+    }
+
+    override fun onNoteItemClick(item: Note) {
+        // go to details fragment to see note details
+        findNavController().navigate(R.id.action_noteListFragment_to_noteDetailsFragment,Bundle().apply {
+            putString("type", "view")
+            Log.d(TAG, "onNoteItemClick: note clicked")
+
+        })
     }
 
 }

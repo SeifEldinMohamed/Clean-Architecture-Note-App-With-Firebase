@@ -7,27 +7,38 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.seif.cleanarchitecturenoteappwithfirebase.databinding.ItemNoteBinding
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
-import com.seif.cleanarchitecturenoteappwithfirebase.utils.MyDiffUtil
+import com.seif.cleanarchitecturenoteappwithfirebase.utils.OnItemClickRecyclerView
 
 class NoteListAdapter : ListAdapter<Note, NoteListAdapter.MyViewHolder>(Companion) {
- //    private var notes: List<Note> = emptyList()
+    //    private var notes: List<Note> = emptyList()
+    private var onItemClickRecyclerView: OnItemClickRecyclerView<Note>? = null
 
- companion object : DiffUtil.ItemCallback<Note>() {
-     override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean {
-         return oldItem == newItem
-     }
+    companion object : DiffUtil.ItemCallback<Note>() {
+        override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean {
+            return oldItem == newItem
+        }
 
-     override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean {
-         return oldItem == newItem
-     }
- }
+        override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean {
+            return oldItem == newItem
+        }
+    }
 
-    class MyViewHolder(private val binding: ItemNoteBinding) :
+    inner class MyViewHolder(private val binding: ItemNoteBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(note: Note) {
             binding.tvTitleNote.text = note.title
             binding.tvDescriptionNote.text = note.description
-            // binding.tvDate.text = note.date.toString()
+            binding.tvDate.text = note.date.toString()
+
+            binding.clNote.setOnClickListener {
+                onItemClickRecyclerView?.onNoteItemClick(note)
+            }
+            binding.ivEdit.setOnClickListener {
+                onItemClickRecyclerView?.onEditItemClick(note)
+            }
+            binding.ivDelete.setOnClickListener {
+                onItemClickRecyclerView?.onDeleteItemClick(note)
+            }
         }
     }
 

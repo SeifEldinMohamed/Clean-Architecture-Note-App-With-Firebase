@@ -20,7 +20,11 @@
         android:id="@+id/noteDetailsFragment"
         android:name="com.seif.cleanarchitecturenoteappwithfirebase.presentation.note_details.NoteDetailsFragment"
         android:label="fragment_note_details"
-        tools:layout="@layout/fragment_note_details" />
+        tools:layout="@layout/fragment_note_details" >
+        <argument
+            android:name="type"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/addNoteFragment"
         android:name="com.seif.cleanarchitecturenoteappwithfirebase.presentation.add_note.AddNoteFragment"
