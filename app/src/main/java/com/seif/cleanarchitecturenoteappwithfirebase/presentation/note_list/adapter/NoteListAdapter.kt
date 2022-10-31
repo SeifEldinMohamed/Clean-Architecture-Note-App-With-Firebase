@@ -1,5 +1,6 @@
 package com.seif.cleanarchitecturenoteappwithfirebase.presentation.note_list.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -11,7 +12,7 @@ import com.seif.cleanarchitecturenoteappwithfirebase.utils.OnItemClickRecyclerVi
 
 class NoteListAdapter : ListAdapter<Note, NoteListAdapter.MyViewHolder>(Companion) {
     //    private var notes: List<Note> = emptyList()
-    private var onItemClickRecyclerView: OnItemClickRecyclerView<Note>? = null
+     var onItemClickRecyclerView: OnItemClickRecyclerView<Note>? = null
 
     companion object : DiffUtil.ItemCallback<Note>() {
         override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean {

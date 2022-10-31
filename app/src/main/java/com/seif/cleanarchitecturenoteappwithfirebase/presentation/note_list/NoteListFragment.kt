@@ -39,6 +39,7 @@ class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        noteListAdapter.onItemClickRecyclerView = this
         observe()
         binding.fabAddNote.setOnClickListener {
             findNavController().navigate(R.id.action_noteListFragment_to_addNoteFragment)
