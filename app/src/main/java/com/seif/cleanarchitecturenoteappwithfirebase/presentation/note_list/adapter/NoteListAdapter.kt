@@ -29,7 +29,7 @@ class NoteListAdapter : ListAdapter<Note, NoteListAdapter.MyViewHolder>(Companio
         fun bind(note: Note) {
             binding.tvTitleNote.text = note.title
             binding.tvDescriptionNote.text = note.description
-            binding.tvDate.text = note.date.toString()
+            binding.tvDate.text = note.date.time.toString()
 
             binding.clNote.setOnClickListener {
                 onItemClickRecyclerView?.onNoteItemClick(note)

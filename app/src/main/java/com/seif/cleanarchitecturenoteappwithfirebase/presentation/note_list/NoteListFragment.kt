@@ -124,5 +124,4 @@ class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
 
         })
     }
-
 }

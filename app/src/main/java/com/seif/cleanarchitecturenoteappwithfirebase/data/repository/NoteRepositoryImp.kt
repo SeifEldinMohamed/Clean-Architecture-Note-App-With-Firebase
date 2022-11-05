@@ -48,10 +48,11 @@ class NoteRepositoryImp @Inject constructor(
     }
 
     override fun addNote(note: Note) = callbackFlow<Resource<String, String>> {
-        firestore.collection(Constants.NOTES_COLLECTION)
-            .add(note.toNoteDto())
+        val document = firestore.collection(Constants.NOTES_COLLECTION).document()
+        note.id = document.id
+            document.set(note.toNoteDto())
             .addOnSuccessListener {
-                trySend(Resource.Success("Note Added Successfully with id : ${it.id}"))
+                trySend(Resource.Success("Note Added Successfully with id : ${document.id}"))
             }
             .addOnFailureListener {
                 trySend(Resource.Error(it.message.toString()))

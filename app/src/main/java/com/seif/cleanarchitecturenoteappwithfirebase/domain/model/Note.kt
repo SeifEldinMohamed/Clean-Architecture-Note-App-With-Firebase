@@ -5,7 +5,7 @@ import java.util.*
 
 @Keep
 data class Note(
-    val id:String,
+    var id:String,
     val title:String,
     val description: String,
     val date:Date

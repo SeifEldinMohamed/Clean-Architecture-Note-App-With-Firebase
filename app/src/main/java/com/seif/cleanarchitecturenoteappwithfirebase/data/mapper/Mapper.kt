@@ -5,6 +5,7 @@ import com.seif.cleanarchitecturenoteappwithfirebase.data.remote.dto.UserDto
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.User
 
+
 fun NoteDto.toNote(): Note {
     return Note(
         id = this.id,
