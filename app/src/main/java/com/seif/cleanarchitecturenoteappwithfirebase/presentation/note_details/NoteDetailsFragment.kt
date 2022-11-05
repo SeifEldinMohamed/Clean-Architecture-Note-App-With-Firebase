@@ -16,25 +16,24 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.seif.cleanarchitecturenoteappwithfirebase.databinding.FragmentNoteDetailsBinding
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
-import com.seif.cleanarchitecturenoteappwithfirebase.presentation.add_note.AddNoteFragmentState
-import com.seif.cleanarchitecturenoteappwithfirebase.presentation.add_note.AddNoteViewModel
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.hide
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.show
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import java.util.*
+import java.util.Date
 
 @AndroidEntryPoint
 class NoteDetailsFragment : Fragment() {
     private val TAG = "NoteDetailsFragment"
     lateinit var binding: FragmentNoteDetailsBinding
-    private val noteDetailsViewModel : NoteDetailsViewModel by viewModels()
+    private val noteDetailsViewModel: NoteDetailsViewModel by viewModels()
     val args: NoteDetailsFragmentArgs by navArgs()
     private lateinit var note: Note
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentNoteDetailsBinding.inflate(inflater, container, false)
@@ -55,38 +54,33 @@ class NoteDetailsFragment : Fragment() {
             )
         }
 
-        binding.etTitleDetails.addTextChangedListener(object : TextWatcher{
+        binding.etTitleDetails.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 checkNoteUpdated()
                 Log.d(TAG, "title on text change: changing...$p0 $p1 $p2 $p3")
-
             }
 
             override fun afterTextChanged(p0: Editable?) {}
-
         })
-        binding.etDescriptionDetails.addTextChangedListener(object : TextWatcher{
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
+        binding.etDescriptionDetails.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 checkNoteUpdated()
                 Log.d(TAG, "description on text change: changing...$p0 $p1 $p2 $p3")
             }
 
-            override fun afterTextChanged(p0: Editable?) {
-                // checkNoteUpdated()
-            }
-
+            override fun afterTextChanged(p0: Editable?) {}
         })
-
     }
 
     private fun observe() {
-        noteDetailsViewModel.state.flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.CREATED)
+        noteDetailsViewModel.state.flowWithLifecycle(
+            viewLifecycleOwner.lifecycle,
+            Lifecycle.State.CREATED
+        )
             .onEach { state ->
                 when (state) {
                     DetailsNoteFragmentState.Init -> Unit
@@ -117,7 +111,10 @@ class NoteDetailsFragment : Fragment() {
         val title = binding.etTitleDetails.text.toString()
         val description = binding.etDescriptionDetails.text.toString()
         Log.d(TAG, "checkNoteUpdated: title:$title, noteTitle ${note.title}")
-        Log.d(TAG, "checkNoteUpdated: description:$description, noteDescripiotn ${note.description}")
+        Log.d(
+            TAG,
+            "checkNoteUpdated: description:$description, noteDescripiotn ${note.description}"
+        )
 
         binding.btnUpdateNote.isEnabled =
             !(title == note.title && description == note.description)
@@ -139,7 +136,7 @@ class NoteDetailsFragment : Fragment() {
         Log.d(TAG, "updateUi: update ui....")
 
         note = args.note
-        when(args.type){
+        when (args.type) {
             "view" -> {
                 binding.btnUpdateNote.hide()
             }
@@ -150,6 +147,4 @@ class NoteDetailsFragment : Fragment() {
         binding.etTitleDetails.setText(note.title)
         binding.etDescriptionDetails.setText(note.description)
     }
-
-
 }

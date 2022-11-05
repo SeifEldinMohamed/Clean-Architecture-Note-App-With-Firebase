@@ -4,20 +4,20 @@ import android.content.Context
 import android.content.SharedPreferences
 
 @Suppress("UNCHECKED_CAST")
-class SharedPrefs (private val context: Context) {
+class SharedPrefs(private val context: Context) {
     companion object {
         private const val PREF = "MyAppPrefName"
         private const val PREF_TOKEN = "user_token"
     }
 
-    private val sharedPref: SharedPreferences = context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
+    private val sharedPref: SharedPreferences =
+        context.getSharedPreferences(PREF, Context.MODE_PRIVATE)
 
-
-    fun saveToken(token: String){
+    fun saveToken(token: String) {
         put(PREF_TOKEN, token)
     }
 
-    fun getToken() : String {
+    fun getToken(): String {
         return get(PREF_TOKEN, String::class.java)
     }
 

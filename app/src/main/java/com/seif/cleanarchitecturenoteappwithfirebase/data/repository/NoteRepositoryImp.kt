@@ -1,6 +1,5 @@
 package com.seif.cleanarchitecturenoteappwithfirebase.data.repository
 
-
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -12,7 +11,6 @@ import com.seif.cleanarchitecturenoteappwithfirebase.domain.repository.NoteRepos
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Constants
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Resource
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
 
@@ -33,7 +31,7 @@ class NoteRepositoryImp @Inject constructor(
                         val note = document.toObject(NoteDto::class.java)
                         notes.add(note)
                     }
-                    Log.d("Note","retrieved notes ${notes.size} = $notes")
+                    Log.d("Note", "retrieved notes ${notes.size} = $notes")
                     trySend(
                         Resource.Success(
                             notes.map { noteDto ->
@@ -45,13 +43,12 @@ class NoteRepositoryImp @Inject constructor(
             }
 
         awaitClose {}
-
     }
 
     override fun addNote(note: Note) = callbackFlow<Resource<String, String>> {
         val document = firestore.collection(Constants.NOTES_COLLECTION).document()
         note.id = document.id
-            document.set(note.toNoteDto())
+        document.set(note.toNoteDto())
             .addOnSuccessListener {
                 trySend(Resource.Success("Note Added Successfully with id : ${document.id}"))
             }
@@ -74,7 +71,6 @@ class NoteRepositoryImp @Inject constructor(
     }
 }
 
-
 //        firestore.collection(Constants.NOTES_COLLECTION)
 //            .get()
 //            .addOnSuccessListener {
@@ -96,8 +92,6 @@ class NoteRepositoryImp @Inject constructor(
 //                trySend(Resource.Error(it.message.toString()))
 //            }
 
-
-
 //        val data = listOf(
 //            NoteDto("1", "first note", "first note description", Date().toString()),
 //            NoteDto("2", "second note", "second note description", Date().toString()),
@@ -109,5 +103,3 @@ class NoteRepositoryImp @Inject constructor(
 //            if (data.isNotEmpty())
 //                emit(Resource.Success(data.map { it.toNote() }))
 //        }
-
-

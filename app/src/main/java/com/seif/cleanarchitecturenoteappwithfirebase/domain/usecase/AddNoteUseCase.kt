@@ -13,7 +13,7 @@ class AddNoteUseCase @Inject constructor(
     operator fun invoke(note: Note) = flow {
         when (val result = note.validNote()) {
             is Resource.Error -> emit(result)
-            is Resource.Success -> noteRepository.addNote(note).collect{
+            is Resource.Success -> noteRepository.addNote(note).collect {
                 emit(it)
             }
         }

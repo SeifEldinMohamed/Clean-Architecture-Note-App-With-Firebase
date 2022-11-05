@@ -1,4 +1,5 @@
 package com.seif.cleanarchitecturenoteappwithfirebase.data.remote
+
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.google.firebase.firestore.Query
@@ -8,7 +9,7 @@ import com.seif.cleanarchitecturenoteappwithfirebase.data.remote.dto.NoteDto
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
 import kotlinx.coroutines.tasks.await
 
-class FirestorePagingSource (
+class FirestorePagingSource(
     private val queryProductsByName: Query
 ) : PagingSource<QuerySnapshot, Note>() {
     override fun getRefreshKey(state: PagingState<QuerySnapshot, Note>): QuerySnapshot? {

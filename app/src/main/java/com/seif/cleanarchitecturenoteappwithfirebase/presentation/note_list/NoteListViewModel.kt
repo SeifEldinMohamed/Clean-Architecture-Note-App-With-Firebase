@@ -39,22 +39,22 @@ class NoteListViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             getNotesUseCase()
                 .collect { result ->
-                when (result) {
-                    is Resource.Success -> {
-                        withContext(Dispatchers.Main) {
-                            setLoading(false)
-                            // Log.d(TAG, "getNotes: ${result.data}")
-                            _state.value = NoteListFragmentState.Notes(result.data)
+                    when (result) {
+                        is Resource.Success -> {
+                            withContext(Dispatchers.Main) {
+                                setLoading(false)
+                                // Log.d(TAG, "getNotes: ${result.data}")
+                                _state.value = NoteListFragmentState.Notes(result.data)
+                            }
                         }
-                    }
-                    is Resource.Error -> {
-                        withContext(Dispatchers.Main) {
-                            setLoading(false)
-                            showError(result.message)
+                        is Resource.Error -> {
+                            withContext(Dispatchers.Main) {
+                                setLoading(false)
+                                showError(result.message)
+                            }
                         }
                     }
                 }
-            }
         }
     }
 }
@@ -64,5 +64,5 @@ sealed class NoteListFragmentState {
     data class IsLoading(val isLoading: Boolean) : NoteListFragmentState()
     data class ShowToast(val message: String) : NoteListFragmentState()
     data class ShowError(val message: String) : NoteListFragmentState()
-    data class Notes(val notes:List<Note>) : NoteListFragmentState()
+    data class Notes(val notes: List<Note>) : NoteListFragmentState()
 }

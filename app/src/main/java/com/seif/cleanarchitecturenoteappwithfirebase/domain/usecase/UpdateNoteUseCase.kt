@@ -1,6 +1,5 @@
 package com.seif.cleanarchitecturenoteappwithfirebase.domain.usecase
 
-import com.seif.cleanarchitecturenoteappwithfirebase.data.repository.NoteRepositoryImp
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.repository.NoteRepository
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Resource
@@ -14,7 +13,7 @@ class UpdateNoteUseCase @Inject constructor(
     operator fun invoke(updatedNote: Note) = flow {
         when (val result = updatedNote.validNote()) {
             is Resource.Error -> emit(result)
-            is Resource.Success -> noteRepository.updateNote(updatedNote).collect{
+            is Resource.Success -> noteRepository.updateNote(updatedNote).collect {
                 emit(it)
             }
         }

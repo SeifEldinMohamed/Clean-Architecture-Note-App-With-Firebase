@@ -2,11 +2,11 @@ package com.seif.cleanarchitecturenoteappwithfirebase.presentation.note_list
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -19,7 +19,8 @@ import com.seif.cleanarchitecturenoteappwithfirebase.presentation.note_list.adap
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.OnItemClickRecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.recyclerview.animators.LandingAnimator
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
@@ -29,7 +30,8 @@ class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
     private val noteListAdapter: NoteListAdapter by lazy { NoteListAdapter() }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentNoteListBinding.inflate(inflater, container, false)
@@ -59,11 +61,11 @@ class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
     }
 
     private fun observeState() {
-            noteListViewModel.state
-                .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.CREATED)
-                .onEach { state ->
-                    handleState(state)
-                }.launchIn(lifecycleScope)
+        noteListViewModel.state
+            .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.CREATED)
+            .onEach { state ->
+                handleState(state)
+            }.launchIn(lifecycleScope)
     }
 
     private fun handleState(state: NoteListFragmentState) {
@@ -79,7 +81,7 @@ class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
             is NoteListFragmentState.Notes -> {
                 Log.d(TAG, "handleState: notes: ${state.notes}")
                 val notes = state.notes
-                if(notes.isNotEmpty())
+                if (notes.isNotEmpty())
                     noteListAdapter.submitList(notes)
                 else
                     Toast.makeText(requireContext(), "no notes yet!", Toast.LENGTH_SHORT).show()
@@ -104,7 +106,8 @@ class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
 
     override fun onEditItemClick(item: Note) {
         // go to details fragment to edit note
-        val action = NoteListFragmentDirections.actionNoteListFragmentToNoteDetailsFragment(item, "edit")
+        val action =
+            NoteListFragmentDirections.actionNoteListFragmentToNoteDetailsFragment(item, "edit")
         findNavController().navigate(action)
         Log.d(TAG, "onEditItemClick: edit clicked")
     }
@@ -112,14 +115,13 @@ class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
     override fun onDeleteItemClick(item: Note) {
         // delete note
         Log.d(TAG, "onDeleteItemClick: delete clicked")
-
     }
 
     override fun onNoteItemClick(item: Note) {
         // go to details fragment to see note details
-        val action = NoteListFragmentDirections.actionNoteListFragmentToNoteDetailsFragment(item, "view")
+        val action =
+            NoteListFragmentDirections.actionNoteListFragmentToNoteDetailsFragment(item, "view")
         findNavController().navigate(action)
-            Log.d(TAG, "onNoteItemClick: note clicked")
-
+        Log.d(TAG, "onNoteItemClick: note clicked")
     }
 }

@@ -2,10 +2,10 @@ package com.seif.cleanarchitecturenoteappwithfirebase.presentation.add_note
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -16,7 +16,7 @@ import com.seif.cleanarchitecturenoteappwithfirebase.utils.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import java.util.*
+import java.util.Date
 
 @AndroidEntryPoint
 class AddNoteFragment : Fragment() {
@@ -24,7 +24,8 @@ class AddNoteFragment : Fragment() {
     private lateinit var binding: FragmentAddNoteBinding
     private val addNoteViewModel: AddNoteViewModel by viewModels()
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
@@ -40,13 +41,11 @@ class AddNoteFragment : Fragment() {
             val note = prepareNote()
             addNoteViewModel.addNote(note)
         }
-
     }
 
     private fun observe() {
         observeState()
     }
-
 
     private fun observeState() {
         addNoteViewModel.state
@@ -58,7 +57,7 @@ class AddNoteFragment : Fragment() {
                     is AddNoteFragmentState.ShowError -> binding.root.showSnackBar(state.message)
                     is AddNoteFragmentState.NoteId -> {
                         binding.root.showSnackBar("note created with id: ${state.noteId}")
-                      //  findNavController().navigate(R.id.action_addNoteFragment_to_noteListFragment)
+                        //  findNavController().navigate(R.id.action_addNoteFragment_to_noteListFragment)
                     }
                 }
             }.launchIn(lifecycleScope)

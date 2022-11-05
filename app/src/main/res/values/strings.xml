@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Clean Architecture Note App With Firebase</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title">title</string>
+    <string name="description">description</string>
+    <string name="update_note">Update Note</string>
+    <string name="addNote">Add Note</string>
+    <string name="updateNote">update Note</string>
 </resources>
