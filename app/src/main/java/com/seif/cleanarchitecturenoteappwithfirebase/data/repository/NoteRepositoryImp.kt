@@ -12,6 +12,7 @@ import com.seif.cleanarchitecturenoteappwithfirebase.domain.repository.NoteRepos
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Constants
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Resource
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
 
@@ -53,6 +54,18 @@ class NoteRepositoryImp @Inject constructor(
             document.set(note.toNoteDto())
             .addOnSuccessListener {
                 trySend(Resource.Success("Note Added Successfully with id : ${document.id}"))
+            }
+            .addOnFailureListener {
+                trySend(Resource.Error(it.message.toString()))
+            }
+        awaitClose {}
+    }
+
+    override fun updateNote(note: Note) = callbackFlow<Resource<String, String>> {
+        val document = firestore.collection(Constants.NOTES_COLLECTION).document(note.id)
+        document.set(note.toNoteDto())
+            .addOnSuccessListener {
+                trySend(Resource.Success("Note Updated Successfully with same id : ${document.id}"))
             }
             .addOnFailureListener {
                 trySend(Resource.Error(it.message.toString()))

@@ -104,9 +104,8 @@ class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
 
     override fun onEditItemClick(item: Note) {
         // go to details fragment to edit note
-        findNavController().navigate(R.id.action_noteListFragment_to_noteDetailsFragment,Bundle().apply {
-            putString("type", "edit")
-        })
+        val action = NoteListFragmentDirections.actionNoteListFragmentToNoteDetailsFragment(item, "edit")
+        findNavController().navigate(action)
         Log.d(TAG, "onEditItemClick: edit clicked")
     }
 
@@ -118,10 +117,9 @@ class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
 
     override fun onNoteItemClick(item: Note) {
         // go to details fragment to see note details
-        findNavController().navigate(R.id.action_noteListFragment_to_noteDetailsFragment,Bundle().apply {
-            putString("type", "view")
+        val action = NoteListFragmentDirections.actionNoteListFragmentToNoteDetailsFragment(item, "view")
+        findNavController().navigate(action)
             Log.d(TAG, "onNoteItemClick: note clicked")
 
-        })
     }
 }

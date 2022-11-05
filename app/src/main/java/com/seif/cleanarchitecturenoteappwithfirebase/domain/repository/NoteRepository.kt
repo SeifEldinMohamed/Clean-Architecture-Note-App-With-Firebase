@@ -9,4 +9,5 @@ interface NoteRepository {
     fun getNotes(): Flow<Resource<List<Note>, String>>
 
     fun addNote(note:Note): Flow<Resource<String, String>>
+    fun updateNote(note:Note): Flow<Resource<String, String>>
 }

@@ -16,14 +16,15 @@
         android:layout_marginEnd="20dp"
         android:background="#F1F1F1"
         android:elevation="6dp"
-        android:hint="title"
+        android:hint="@string/title"
         android:inputType="textPersonName"
         android:padding="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="TextContrastCheck" />
+        tools:ignore="TextContrastCheck"
+        android:autofillHints="title" />
 
 
     <EditText
@@ -36,13 +37,39 @@
         android:background="#F1F1F1"
         android:elevation="6dp"
         android:gravity="start|top"
-        android:hint="description"
+        android:hint="@string/description"
         android:inputType="textMultiLine"
         android:padding="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_title_details"
-        tools:ignore="TextContrastCheck" />
+        tools:ignore="TextContrastCheck"
+        android:autofillHints="description" />
+
+    <Button
+        android:id="@+id/btn_update_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:text="@string/update_note"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/et_description_details"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="@+id/et_description_details"
+        app:layout_constraintTop_toBottomOf="@+id/et_description_details" />
+
+    <ProgressBar
+        android:id="@+id/progressBar_details"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.71" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

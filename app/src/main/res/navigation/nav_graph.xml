@@ -22,6 +22,9 @@
         android:label="fragment_note_details"
         tools:layout="@layout/fragment_note_details" >
         <argument
+            android:name="note"
+            app:argType="com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note" />
+        <argument
             android:name="type"
             app:argType="string" />
     </fragment>

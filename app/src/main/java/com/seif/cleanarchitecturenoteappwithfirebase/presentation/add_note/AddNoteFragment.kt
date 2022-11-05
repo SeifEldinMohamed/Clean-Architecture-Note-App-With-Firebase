@@ -1,6 +1,5 @@
 package com.seif.cleanarchitecturenoteappwithfirebase.presentation.add_note
 
-import android.icu.util.LocaleData
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,22 +10,18 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
-import com.seif.cleanarchitecturenoteappwithfirebase.R
 import com.seif.cleanarchitecturenoteappwithfirebase.databinding.FragmentAddNoteBinding
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import java.text.DateFormat
-import java.time.LocalDateTime
 import java.util.*
 
 @AndroidEntryPoint
 class AddNoteFragment : Fragment() {
     private val TAG = "AddNoteFragment"
-    lateinit var binding: FragmentAddNoteBinding
+    private lateinit var binding: FragmentAddNoteBinding
     private val addNoteViewModel: AddNoteViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -93,5 +88,4 @@ class AddNoteFragment : Fragment() {
             date = date,
         )
     }
-
 }
