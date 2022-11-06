@@ -108,4 +108,7 @@ dependencies {
     // recycler view animation
     implementation 'jp.wasabeef:recyclerview-animators:4.0.2'
 
+    // Swipe Refresh Layout
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+
 }

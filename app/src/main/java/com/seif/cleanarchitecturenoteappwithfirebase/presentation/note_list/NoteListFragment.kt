@@ -55,6 +55,11 @@ class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
         binding.fabAddNote.setOnClickListener {
             findNavController().navigate(R.id.action_noteListFragment_to_addNoteFragment)
         }
+        binding.swiptToRefresh.setOnRefreshListener {
+            noteListViewModel.getNotes()
+            binding.swiptToRefresh.isRefreshing = false
+        }
+        // TODO: issue: when submitting new list the rv not scrolling to the first item
     }
 
     private fun observe() {
@@ -90,9 +95,9 @@ class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
             is NoteListFragmentState.Notes -> {
                 Log.d(TAG, "handleState: notes: ${state.notes}")
                 val notes = state.notes
-                if (notes.isNotEmpty())
+                if (notes.isNotEmpty()) {
                     noteListAdapter.submitList(notes)
-                else
+                } else
                     Toast.makeText(requireContext(), "no notes yet!", Toast.LENGTH_SHORT).show()
             }
         }
