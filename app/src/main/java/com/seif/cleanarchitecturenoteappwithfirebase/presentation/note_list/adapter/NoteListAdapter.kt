@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.seif.cleanarchitecturenoteappwithfirebase.databinding.ItemNoteBinding
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.OnItemClickRecyclerView
+import com.seif.cleanarchitecturenoteappwithfirebase.utils.formatDate
+import java.util.*
 
 class NoteListAdapter : ListAdapter<Note, NoteListAdapter.MyViewHolder>(Companion) {
     //    private var notes: List<Note> = emptyList()
@@ -28,7 +30,7 @@ class NoteListAdapter : ListAdapter<Note, NoteListAdapter.MyViewHolder>(Companio
         fun bind(note: Note, position: Int) {
             binding.tvTitleNote.text = note.title
             binding.tvDescriptionNote.text = note.description
-            binding.tvDate.text = note.date.toString().substring(0, 16)
+            binding.tvDate.text = note.date.formatDate()
 
             binding.clNote.setOnClickListener {
                 onItemClickRecyclerView?.onNoteItemClick(note)
