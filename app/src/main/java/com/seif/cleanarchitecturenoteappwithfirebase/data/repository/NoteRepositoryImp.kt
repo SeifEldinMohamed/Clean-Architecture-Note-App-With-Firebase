@@ -18,30 +18,28 @@ class NoteRepositoryImp @Inject constructor(
     private val firestore: FirebaseFirestore
 ) : NoteRepository {
     override fun getNotes() = callbackFlow<Resource<List<Note>, String>> {
+
         firestore.collection(Constants.NOTES_COLLECTION)
             .orderBy("date", Query.Direction.DESCENDING)
-            .addSnapshotListener { value, error ->
-                if (error != null) {
-                    Log.d("NoteRepositoryImp", "Listen failed: $error")
-                    return@addSnapshotListener
-                }
+            .get()
+            .addOnSuccessListener {
                 val notes = arrayListOf<NoteDto>()
-                if (value != null) {
-                    for (document in value) {
-                        val note = document.toObject(NoteDto::class.java)
-                        notes.add(note)
-                    }
-                    Log.d("Note", "retrieved notes ${notes.size} = $notes")
-                    trySend(
-                        Resource.Success(
-                            notes.map { noteDto ->
-                                noteDto.toNote()
-                            }
-                        )
-                    )
+                for (document in it) {
+                    val note = document.toObject(NoteDto::class.java)
+                    notes.add(note)
                 }
+                Log.d("NoteRepository", "getNotes: $notes")
+                trySend(
+                    Resource.Success(
+                        notes.map { noteDto ->
+                            noteDto.toNote()
+                        }
+                    )
+                )
             }
-
+            .addOnFailureListener {
+                trySend(Resource.Error(it.message.toString()))
+            }
         awaitClose {}
     }
 
@@ -103,3 +101,32 @@ class NoteRepositoryImp @Inject constructor(
 //            if (data.isNotEmpty())
 //                emit(Resource.Success(data.map { it.toNote() }))
 //        }
+
+/** Snapshot query listener**/
+/*
+//        firestore.collection(Constants.NOTES_COLLECTION)
+//            .orderBy("date", Query.Direction.DESCENDING)
+//            .addSnapshotListener { value, error ->
+//                if (error != null) {
+//                    Log.d("NoteRepositoryImp", "Listen failed: $error")
+//                    return@addSnapshotListener
+//                }
+//                val notes = arrayListOf<NoteDto>()
+//                if (value != null) {
+//                    for (document in value) {
+//                        val note = document.toObject(NoteDto::class.java)
+//                        notes.add(note)
+//                    }
+//                    Log.d("Note", "retrieved notes ${notes.size} = $notes")
+//                    trySend(
+//                        Resource.Success(
+//                            notes.map { noteDto ->
+//                                noteDto.toNote()
+//                            }
+//                        )
+//                    )
+//                }
+//            }
+//
+//        awaitClose {}
+*/
