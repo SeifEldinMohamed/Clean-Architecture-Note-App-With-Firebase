@@ -67,6 +67,18 @@ class NoteRepositoryImp @Inject constructor(
             }
         awaitClose {}
     }
+
+    override fun deleteNote(note: Note) = callbackFlow<Resource<String, String>> {
+        val document = firestore.collection(Constants.NOTES_COLLECTION).document(note.id)
+        document.delete()
+            .addOnSuccessListener {
+                trySend(Resource.Success("Note Deleted Successfully with id : ${document.id}"))
+            }
+            .addOnFailureListener {
+                trySend(Resource.Error(it.message.toString()))
+            }
+        awaitClose {}
+    }
 }
 
 //        firestore.collection(Constants.NOTES_COLLECTION)

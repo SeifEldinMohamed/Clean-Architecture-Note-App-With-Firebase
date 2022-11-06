@@ -18,6 +18,7 @@ import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
 import com.seif.cleanarchitecturenoteappwithfirebase.presentation.note_list.adapter.NoteListAdapter
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.OnItemClickRecyclerView
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.SharedPrefs
+import com.seif.cleanarchitecturenoteappwithfirebase.utils.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.recyclerview.animators.LandingAnimator
 import kotlinx.coroutines.flow.launchIn
@@ -30,6 +31,8 @@ class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
     private lateinit var binding: FragmentNoteListBinding
     private val noteListViewModel: NoteListViewModel by viewModels()
     private val noteListAdapter: NoteListAdapter by lazy { NoteListAdapter() }
+    private var deletedNotePosition: Int? = null
+    private var noteList: MutableList<Note> = arrayListOf()
 
     @Inject
     lateinit var sharedPrefs: SharedPrefs
@@ -60,6 +63,7 @@ class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
             binding.swiptToRefresh.isRefreshing = false
         }
         // TODO: issue: when submitting new list the rv not scrolling to the first item
+        // delete note
     }
 
     private fun observe() {
@@ -88,6 +92,7 @@ class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
             is NoteListFragmentState.IsLoading -> handleLoading(state.isLoading)
             is NoteListFragmentState.ShowError -> {
                 Log.d(TAG, "handleState: Error: ${state.message}")
+                binding.root.showSnackBar(state.message)
             }
             is NoteListFragmentState.ShowToast -> {
                 Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
@@ -95,10 +100,19 @@ class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
             is NoteListFragmentState.Notes -> {
                 Log.d(TAG, "handleState: notes: ${state.notes}")
                 val notes = state.notes
+                noteList = notes.toMutableList()
                 if (notes.isNotEmpty()) {
                     noteListAdapter.submitList(notes)
                 } else
                     Toast.makeText(requireContext(), "no notes yet!", Toast.LENGTH_SHORT).show()
+            }
+            is NoteListFragmentState.NoteDeleted -> {
+                deletedNotePosition?.let {
+                    binding.root.showSnackBar(state.message)
+                    noteList.removeAt(it)
+                    noteListAdapter.submitList(noteList)
+                    deletedNotePosition = null
+                }
             }
         }
     }
@@ -126,9 +140,11 @@ class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
         Log.d(TAG, "onEditItemClick: edit clicked")
     }
 
-    override fun onDeleteItemClick(item: Note) {
+    override fun onDeleteItemClick(item: Note, position: Int) {
         // delete note
         Log.d(TAG, "onDeleteItemClick: delete clicked")
+        deletedNotePosition = position
+        noteListViewModel.deleteNote(item)
     }
 
     override fun onNoteItemClick(item: Note) {

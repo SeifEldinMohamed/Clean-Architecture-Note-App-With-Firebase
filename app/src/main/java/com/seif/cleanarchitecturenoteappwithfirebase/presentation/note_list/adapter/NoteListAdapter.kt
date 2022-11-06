@@ -25,7 +25,7 @@ class NoteListAdapter : ListAdapter<Note, NoteListAdapter.MyViewHolder>(Companio
 
     inner class MyViewHolder(private val binding: ItemNoteBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(note: Note) {
+        fun bind(note: Note, position: Int) {
             binding.tvTitleNote.text = note.title
             binding.tvDescriptionNote.text = note.description
             binding.tvDate.text = note.date.toString().substring(0, 16)
@@ -37,7 +37,7 @@ class NoteListAdapter : ListAdapter<Note, NoteListAdapter.MyViewHolder>(Companio
                 onItemClickRecyclerView?.onEditItemClick(note)
             }
             binding.ivDelete.setOnClickListener {
-                onItemClickRecyclerView?.onDeleteItemClick(note)
+                onItemClickRecyclerView?.onDeleteItemClick(note, position)
             }
         }
     }
@@ -53,7 +53,7 @@ class NoteListAdapter : ListAdapter<Note, NoteListAdapter.MyViewHolder>(Companio
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), position)
     }
 
     //   override fun getItemCount() = notes.size
