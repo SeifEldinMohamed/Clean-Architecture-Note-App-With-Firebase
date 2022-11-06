@@ -7,17 +7,22 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.seif.cleanarchitecturenoteappwithfirebase.R
 import com.seif.cleanarchitecturenoteappwithfirebase.databinding.ActivityMainBinding
+import com.seif.cleanarchitecturenoteappwithfirebase.utils.SharedPrefs
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
     lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
+    @Inject
+    lateinit var sharedPrefs: SharedPrefs
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        sharedPrefs.put("firstTime", true)
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment

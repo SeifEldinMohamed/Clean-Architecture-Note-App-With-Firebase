@@ -21,10 +21,10 @@ class SharedPrefs(private val context: Context) {
         return get(PREF_TOKEN, String::class.java)
     }
 
-    private fun <T> get(key: String, clazz: Class<T>): T =
+    fun <T> get(key: String, clazz: Class<T>): T =
         when (clazz) {
             String::class.java -> sharedPref.getString(key, "")
-            Boolean::class.java -> sharedPref.getBoolean(key, false)
+            Boolean::class.java -> sharedPref.getBoolean(key, true)
             Float::class.java -> sharedPref.getFloat(key, -1f)
             Double::class.java -> sharedPref.getFloat(key, -1f)
             Int::class.java -> sharedPref.getInt(key, -1)
@@ -32,7 +32,7 @@ class SharedPrefs(private val context: Context) {
             else -> null
         } as T
 
-    private fun <T> put(key: String, data: T) {
+    fun <T> put(key: String, data: T) {
         val editor = sharedPref.edit()
         when (data) {
             is String -> editor.putString(key, data)

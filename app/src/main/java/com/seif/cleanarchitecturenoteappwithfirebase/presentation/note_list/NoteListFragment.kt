@@ -17,10 +17,12 @@ import com.seif.cleanarchitecturenoteappwithfirebase.databinding.FragmentNoteLis
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
 import com.seif.cleanarchitecturenoteappwithfirebase.presentation.note_list.adapter.NoteListAdapter
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.OnItemClickRecyclerView
+import com.seif.cleanarchitecturenoteappwithfirebase.utils.SharedPrefs
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.recyclerview.animators.LandingAnimator
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
@@ -28,6 +30,9 @@ class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
     private lateinit var binding: FragmentNoteListBinding
     private val noteListViewModel: NoteListViewModel by viewModels()
     private val noteListAdapter: NoteListAdapter by lazy { NoteListAdapter() }
+
+    @Inject
+    lateinit var sharedPrefs: SharedPrefs
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,6 +47,10 @@ class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
         super.onViewCreated(view, savedInstanceState)
 
         noteListAdapter.onItemClickRecyclerView = this
+        if (sharedPrefs.get("firstTime", Boolean::class.java)) {
+            noteListViewModel.getNotes() // we will make it at first time only
+            sharedPrefs.put("firstTime", false)
+        }
         observe()
         binding.fabAddNote.setOnClickListener {
             findNavController().navigate(R.id.action_noteListFragment_to_addNoteFragment)

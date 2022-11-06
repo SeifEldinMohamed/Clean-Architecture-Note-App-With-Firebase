@@ -22,10 +22,6 @@ class NoteListViewModel @Inject constructor(
     private val _state = MutableStateFlow<NoteListFragmentState>(NoteListFragmentState.Init)
     val state: StateFlow<NoteListFragmentState> get() = _state
 
-    init {
-        getNotes()
-    }
-
     private fun setLoading(isLoading: Boolean) {
         _state.value = NoteListFragmentState.IsLoading(isLoading)
     }
@@ -34,7 +30,7 @@ class NoteListViewModel @Inject constructor(
         _state.value = NoteListFragmentState.ShowError(message)
     }
 
-    private fun getNotes() {
+    fun getNotes() {
         setLoading(true)
         viewModelScope.launch(Dispatchers.IO) {
             getNotesUseCase()
