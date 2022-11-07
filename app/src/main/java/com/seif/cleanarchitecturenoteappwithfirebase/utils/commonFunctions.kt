@@ -36,11 +36,11 @@ fun View.invisible() {
     this.visibility = View.INVISIBLE
 }
 
-fun View.disable(     ) {
-    isEnabled =        false
+fun View.disable() {
+    isEnabled = false
 }
 
-fun View.enabled(    ) {
+fun View.enabled() {
     isEnabled = true
 }
 
