@@ -8,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import com.seif.cleanarchitecturenoteappwithfirebase.R
 import com.seif.cleanarchitecturenoteappwithfirebase.databinding.ActivityMainBinding
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.SharedPrefs
+import com.seif.cleanarchitecturenoteappwithfirebase.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

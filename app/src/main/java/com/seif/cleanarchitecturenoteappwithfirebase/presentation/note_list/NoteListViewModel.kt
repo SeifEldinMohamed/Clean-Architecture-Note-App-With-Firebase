@@ -36,7 +36,7 @@ class NoteListViewModel @Inject constructor(
     fun getNotes() {
         setLoading(true)
         viewModelScope.launch(Dispatchers.IO) {
-            getNotesUseCase()
+           getNotesUseCase()
                 .collect { result ->
                     when (result) {
                         is Resource.Success -> {

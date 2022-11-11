@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/noteListFragment">
+    app:startDestination="@id/registerFragment">
     <fragment
         android:id="@+id/noteListFragment"
         android:name="com.seif.cleanarchitecturenoteappwithfirebase.presentation.note_list.NoteListFragment"
@@ -35,6 +35,14 @@
         tools:layout="@layout/fragment_add_note" >
         <action
             android:id="@+id/action_addNoteFragment_to_noteListFragment"
+            app:destination="@id/noteListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.seif.cleanarchitecturenoteappwithfirebase.presentation.auth.register.RegisterFragment"
+        android:label="RegisterFragment" >
+        <action
+            android:id="@+id/action_registerFragment_to_noteListFragment"
             app:destination="@id/noteListFragment" />
     </fragment>
 </navigation>
