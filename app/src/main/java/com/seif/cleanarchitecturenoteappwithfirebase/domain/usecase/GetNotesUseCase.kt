@@ -12,5 +12,4 @@ class GetNotesUseCase @Inject constructor(
     operator fun invoke(): Flow<Resource<List<Note>, String>> {
         return noteRepository.getNotes()
     }
-
 }

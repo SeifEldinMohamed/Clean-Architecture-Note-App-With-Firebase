@@ -1,5 +1,6 @@
 package com.seif.cleanarchitecturenoteappwithfirebase.di
 
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
@@ -17,4 +18,9 @@ object FirebaseModule {
         return FirebaseFirestore.getInstance()
     }
 
+    @Singleton
+    @Provides
+    fun provideFirebaseAuthInstance(): FirebaseAuth {
+        return FirebaseAuth.getInstance()
+    }
 }

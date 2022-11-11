@@ -19,7 +19,6 @@ import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.hide
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.show
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.showSnackBar
-import com.seif.cleanarchitecturenoteappwithfirebase.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

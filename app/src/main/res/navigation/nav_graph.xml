@@ -15,6 +15,9 @@
         <action
             android:id="@+id/action_noteListFragment_to_addNoteFragment"
             app:destination="@id/addNoteFragment" />
+        <argument
+            android:name="user"
+            app:argType="com.seif.cleanarchitecturenoteappwithfirebase.domain.model.User" />
     </fragment>
     <fragment
         android:id="@+id/noteDetailsFragment"

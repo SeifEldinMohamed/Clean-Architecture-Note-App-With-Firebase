@@ -4,7 +4,8 @@ import androidx.annotation.Keep
 
 @Keep
 data class UserDto(
-    val name: String,
+    val id: String,
+    val username: String,
     val email: String,
     val password: String,
     val subscribed: Boolean

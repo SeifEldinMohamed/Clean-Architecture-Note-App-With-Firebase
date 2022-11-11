@@ -25,7 +25,18 @@ fun Note.toNoteDto(): NoteDto {
 
 fun UserDto.toUser(): User {
     return User(
-        name = this.name,
+        id = this.id,
+        username = this.username,
+        email = this.email,
+        password = this.password,
+        subscribed = this.subscribed
+    )
+}
+
+fun User.toUserDto(): UserDto {
+    return UserDto(
+        id = this.id,
+        username = this.username,
         email = this.email,
         password = this.password,
         subscribed = this.subscribed
