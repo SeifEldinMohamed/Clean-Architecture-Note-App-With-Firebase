@@ -57,4 +57,18 @@ class AuthRepositoryImp @Inject constructor(
             }
         // awaitClose {}
     }
+
+    override fun loginUser(email: String, password: String) =
+        callbackFlow<Resource<String, String>> {
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnSuccessListener {
+                    trySend(Resource.Success(it.user?.uid.toString()))
+                    Log.d(TAG, "login: Login Successfully ${it.user}")
+                }
+                .addOnFailureListener {
+                    trySend(Resource.Error(it.message.toString()))
+                    Log.d(TAG, "login: login Failed ${it.localizedMessage}")
+                }
+            awaitClose {}
+        }
 }
