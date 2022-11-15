@@ -71,4 +71,17 @@ class AuthRepositoryImp @Inject constructor(
                 }
             awaitClose {}
         }
+
+    override fun forgetPassword(email: String) = callbackFlow {
+        auth.sendPasswordResetEmail(email)
+            .addOnSuccessListener {
+                trySend(Resource.Success("email send successfully"))
+                Log.d(TAG, "forget password: send email to reset password successfully")
+            }
+            .addOnFailureListener {
+                trySend(Resource.Error(it.message.toString()))
+                Log.d(TAG, "forget password:failed to send email to reset password")
+            }
+        awaitClose {}
+    }
 }
