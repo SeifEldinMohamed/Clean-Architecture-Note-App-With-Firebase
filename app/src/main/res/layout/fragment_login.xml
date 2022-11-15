@@ -20,7 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/forgot_pass_label"
+        app:layout_constraintTop_toBottomOf="@+id/tvForgetPassword"
         tools:ignore="DuplicateSpeakableTextCheck" />
 
     <TextView
@@ -107,7 +107,7 @@
         tools:ignore="LabelFor,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
     <TextView
-        android:id="@+id/forgot_pass_label"
+        android:id="@+id/tvForgetPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -119,7 +119,7 @@
         app:layout_constraintTop_toBottomOf="@+id/et_password" />
 
     <TextView
-        android:id="@+id/register_label"
+        android:id="@+id/tvHaveNotRegistered"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"

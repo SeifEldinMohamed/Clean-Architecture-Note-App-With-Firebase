@@ -134,6 +134,16 @@ fun isValidEmailAndPassword(email: String, password: String): Resource<String, S
     }
 }
 
+fun isValidEmailInput(email: String): Resource<String, String> {
+    return if (email.isEmpty()) {
+        Resource.Error("email can't be empty !")
+    } else if (!isValidEmail(email)) {
+        Resource.Error("please enter a valid email !")
+    } else {
+        Resource.Success("valid Email")
+    }
+}
+
 fun isValidEmail(email: String): Boolean {
     return Patterns.EMAIL_ADDRESS.matcher(email).matches()
 }

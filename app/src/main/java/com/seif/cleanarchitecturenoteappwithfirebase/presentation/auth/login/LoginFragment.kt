@@ -43,6 +43,12 @@ class LoginFragment : Fragment() {
         binding.btnLogin.setOnClickListener {
             loginUser()
         }
+        binding.tvForgetPassword.setOnClickListener {
+            findNavController().navigate(R.id.action_loginFragment_to_forgetPasswordFragment)
+        }
+        binding.tvHaveNotRegistered.setOnClickListener {
+            findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+        }
     }
 
     private fun observe() {
