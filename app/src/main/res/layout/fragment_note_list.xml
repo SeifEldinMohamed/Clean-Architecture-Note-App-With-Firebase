@@ -30,8 +30,22 @@
             tools:listitem="@layout/item_note">
 
         </androidx.recyclerview.widget.RecyclerView>
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:contentDescription="@string/logout_fab_image_description"
+        android:src="@drawable/ic_logout"
+        app:layout_constraintBottom_toTopOf="@+id/fab_add_note"
+        app:layout_constraintEnd_toEndOf="@+id/fab_add_note"
+        app:layout_constraintStart_toStartOf="@+id/fab_add_note"
+        tools:ignore="SpeakableTextPresentCheck,ImageContrastCheck" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_note"

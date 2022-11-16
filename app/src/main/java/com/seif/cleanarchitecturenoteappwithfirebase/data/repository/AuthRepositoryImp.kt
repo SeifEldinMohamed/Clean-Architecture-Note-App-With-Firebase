@@ -58,7 +58,7 @@ class AuthRepositoryImp @Inject constructor(
         // awaitClose {}
     }
 
-    override fun loginUser(email: String, password: String) =
+    override fun loginInUser(email: String, password: String) =
         callbackFlow<Resource<String, String>> {
             auth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener {
@@ -83,5 +83,10 @@ class AuthRepositoryImp @Inject constructor(
                 Log.d(TAG, "forget password:failed to send email to reset password")
             }
         awaitClose {}
+    }
+
+    override suspend fun logOut(): Resource<String, String> {
+        auth.signOut()
+        return Resource.Success("Logged Out")
     }
 }

@@ -2,9 +2,7 @@ package com.seif.cleanarchitecturenoteappwithfirebase.presentation.note_list
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -62,6 +60,10 @@ class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
             noteListViewModel.getNotes()
             binding.swiptToRefresh.isRefreshing = false
         }
+
+        binding.fabLogout.setOnClickListener {
+            noteListViewModel.logout()
+        }
         // TODO: issue: when submitting new list the rv not scrolling to the first item
         // delete note
     }
@@ -113,6 +115,9 @@ class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
                     noteListAdapter.submitList(noteList)
                     deletedNotePosition = null
                 }
+            }
+            is NoteListFragmentState.Logout -> {
+                findNavController().navigate(R.id.action_noteListFragment_to_loginFragment)
             }
         }
     }

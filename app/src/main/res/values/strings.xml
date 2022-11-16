@@ -21,4 +21,6 @@
     <string name="haven_t_registered_yet">Haven’t registered yet?</string>
     <string name="forgot_password_title">Forgot Password</string>
     <string name="send">Send</string>
+    <string name="logout">Logout</string>
+    <string name="logout_fab_image_description">logout fab image description</string>
 </resources>
