@@ -8,6 +8,7 @@ import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.User
 fun NoteDto.toNote(): Note {
     return Note(
         id = this.id,
+        userId = this.userId,
         title = this.title,
         description = this.description,
         date = this.date
@@ -17,6 +18,7 @@ fun NoteDto.toNote(): Note {
 fun Note.toNoteDto(): NoteDto {
     return NoteDto(
         id = this.id,
+        userId = this.userId,
         title = this.title,
         description = this.description,
         date = this.date

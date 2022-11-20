@@ -7,6 +7,7 @@ import java.util.Date
 @Keep
 data class NoteDto(
     val id: String = "",
+    val userId: String = "",
     val title: String = "",
     val description: String = "",
     @ServerTimestamp // it will store timestamp on the fireStore in the document
