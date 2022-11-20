@@ -9,6 +9,7 @@ import com.seif.cleanarchitecturenoteappwithfirebase.data.remote.dto.NoteDto
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.repository.NoteRepository
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Constants
+import com.seif.cleanarchitecturenoteappwithfirebase.utils.Constants.Companion.USER_ID
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Resource
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
@@ -17,9 +18,10 @@ import javax.inject.Inject
 class NoteRepositoryImp @Inject constructor(
     private val firestore: FirebaseFirestore
 ) : NoteRepository {
-    override fun getNotes() = callbackFlow<Resource<List<Note>, String>> {
-
+    override fun getNotes(userId: String) = callbackFlow<Resource<List<Note>, String>> {
+// whenever we use order by and whereEqualTo, we need to create index from firestore ( exception will give us link to direct us to firestore and make index
         firestore.collection(Constants.NOTES_COLLECTION)
+            .whereEqualTo(USER_ID, userId)
             .orderBy("date", Query.Direction.DESCENDING)
             .get()
             .addOnSuccessListener {

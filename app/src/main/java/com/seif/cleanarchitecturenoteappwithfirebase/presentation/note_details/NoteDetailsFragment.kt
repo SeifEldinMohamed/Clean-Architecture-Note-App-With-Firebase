@@ -14,6 +14,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
+import com.google.firebase.auth.FirebaseUser
 import com.seif.cleanarchitecturenoteappwithfirebase.databinding.FragmentNoteDetailsBinding
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.hide
@@ -29,6 +30,8 @@ class NoteDetailsFragment : Fragment() {
     private val TAG = "NoteDetailsFragment"
     lateinit var binding: FragmentNoteDetailsBinding
     private val noteDetailsViewModel: NoteDetailsViewModel by viewModels()
+    private var firebaseCurrentUser: FirebaseUser? = null
+    // save userId in shared preference and use it in whole app better than calling for id from firebase
     val args: NoteDetailsFragmentArgs by navArgs()
     private lateinit var note: Note
     override fun onCreateView(
@@ -42,6 +45,7 @@ class NoteDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        firebaseCurrentUser = noteDetailsViewModel.getFirebaseCurrentUser()
 
         updateUi()
         checkNoteUpdated()
@@ -126,6 +130,7 @@ class NoteDetailsFragment : Fragment() {
         val date = Date()
         return Note(
             id = note.id,
+            userId = firebaseCurrentUser?.uid.toString(),
             title = title,
             description = description,
             date = date

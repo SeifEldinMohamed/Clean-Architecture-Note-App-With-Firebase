@@ -10,6 +10,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.auth.FirebaseUser
 import com.seif.cleanarchitecturenoteappwithfirebase.R
 import com.seif.cleanarchitecturenoteappwithfirebase.databinding.FragmentNoteListBinding
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
@@ -31,7 +32,7 @@ class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
     private val noteListAdapter: NoteListAdapter by lazy { NoteListAdapter() }
     private var deletedNotePosition: Int? = null
     private var noteList: MutableList<Note> = arrayListOf()
-
+    private var firebaseCurrentUser: FirebaseUser ? = null
     @Inject
     lateinit var sharedPrefs: SharedPrefs
 
@@ -47,9 +48,13 @@ class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        firebaseCurrentUser = noteListViewModel.getFirebaseCurrentUser()
+
         noteListAdapter.onItemClickRecyclerView = this
         if (sharedPrefs.get("firstTime", Boolean::class.java)) {
-            noteListViewModel.getNotes() // we will make it at first time only
+            firebaseCurrentUser?.let { currentUser ->
+                noteListViewModel.getNotes(currentUser.uid) // we will make it at first time only
+            }
             sharedPrefs.put("firstTime", false)
         }
         observe()
@@ -57,7 +62,9 @@ class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
             findNavController().navigate(R.id.action_noteListFragment_to_addNoteFragment)
         }
         binding.swiptToRefresh.setOnRefreshListener {
-            noteListViewModel.getNotes()
+            firebaseCurrentUser?.let { currentUser ->
+                noteListViewModel.getNotes(currentUser.uid) // we will make it at first time only
+            }
             binding.swiptToRefresh.isRefreshing = false
         }
 

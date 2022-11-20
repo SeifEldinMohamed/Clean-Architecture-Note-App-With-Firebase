@@ -2,8 +2,10 @@ package com.seif.cleanarchitecturenoteappwithfirebase.presentation.add_note
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseUser
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.usecase.AddNoteUseCase
+import com.seif.cleanarchitecturenoteappwithfirebase.domain.usecase.GetFirebaseCurrentUserUseCase
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddNoteViewModel @Inject constructor(
-    private val addNoteUseCase: AddNoteUseCase
+    private val addNoteUseCase: AddNoteUseCase,
+    private val getFirebaseCurrentUserUseCase: GetFirebaseCurrentUserUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<AddNoteFragmentState>(AddNoteFragmentState.Init)
@@ -53,5 +56,8 @@ class AddNoteViewModel @Inject constructor(
                     }
                 }
         }
+    }
+    fun getFirebaseCurrentUser(): FirebaseUser? {
+        return getFirebaseCurrentUserUseCase()
     }
 }

@@ -9,7 +9,7 @@ import javax.inject.Inject
 class GetNotesUseCase @Inject constructor(
     private val noteRepository: NoteRepository
 ) {
-    operator fun invoke(): Flow<Resource<List<Note>, String>> {
-        return noteRepository.getNotes()
+    operator fun invoke(userId: String): Flow<Resource<List<Note>, String>> {
+        return noteRepository.getNotes(userId)
     }
 }

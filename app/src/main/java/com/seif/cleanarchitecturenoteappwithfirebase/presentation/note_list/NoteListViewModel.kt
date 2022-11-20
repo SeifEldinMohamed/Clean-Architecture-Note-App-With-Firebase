@@ -3,8 +3,10 @@ package com.seif.cleanarchitecturenoteappwithfirebase.presentation.note_list
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseUser
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.usecase.DeleteNoteUseCase
+import com.seif.cleanarchitecturenoteappwithfirebase.domain.usecase.GetFirebaseCurrentUserUseCase
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.usecase.GetNotesUseCase
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.usecase.LogoutUseCase
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Resource
@@ -20,7 +22,8 @@ import javax.inject.Inject
 class NoteListViewModel @Inject constructor(
     private val getNotesUseCase: GetNotesUseCase,
     private val deleteNoteUseCase: DeleteNoteUseCase,
-    private val logoutUseCase: LogoutUseCase
+    private val logoutUseCase: LogoutUseCase,
+    private val getFirebaseCurrentUserUseCase: GetFirebaseCurrentUserUseCase
 ) : ViewModel() {
     private val TAG = "NoteListViewModel"
 
@@ -35,10 +38,10 @@ class NoteListViewModel @Inject constructor(
         _state.value = NoteListFragmentState.ShowError(message)
     }
 
-    fun getNotes() {
+    fun getNotes(userId: String) {
         setLoading(true)
         viewModelScope.launch(Dispatchers.IO) {
-            getNotesUseCase()
+            getNotesUseCase(userId)
                 .collect { result ->
                     when (result) {
                         is Resource.Success -> {
@@ -102,6 +105,10 @@ class NoteListViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun getFirebaseCurrentUser(): FirebaseUser? {
+        return getFirebaseCurrentUserUseCase()
     }
 }
 

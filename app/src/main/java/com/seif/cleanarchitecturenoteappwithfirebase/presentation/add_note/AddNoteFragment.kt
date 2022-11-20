@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.auth.FirebaseUser
 import com.seif.cleanarchitecturenoteappwithfirebase.databinding.FragmentAddNoteBinding
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.showSnackBar
@@ -23,6 +24,7 @@ class AddNoteFragment : Fragment() {
     private val TAG = "AddNoteFragment"
     private lateinit var binding: FragmentAddNoteBinding
     private val addNoteViewModel: AddNoteViewModel by viewModels()
+    private var firebaseCurrentUser: FirebaseUser? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,6 +37,7 @@ class AddNoteFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        firebaseCurrentUser = addNoteViewModel.getFirebaseCurrentUser()
 
         observe()
         binding.btnAddNote.setOnClickListener {
@@ -80,8 +83,10 @@ class AddNoteFragment : Fragment() {
         val title = binding.etTitleDetails.text.toString()
         val description = binding.etDescriptionDetails.text.toString()
         val date = Date()
+        Log.d(TAG, "prepareNote: userId = ${firebaseCurrentUser?.uid}")
         return Note(
             id = "",
+            userId = firebaseCurrentUser?.uid.toString(),
             title = title,
             description = description,
             date = date,
