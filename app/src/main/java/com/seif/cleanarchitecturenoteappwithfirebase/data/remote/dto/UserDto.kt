@@ -9,6 +9,4 @@ data class UserDto(
     val email: String,
     val password: String,
     val subscribed: Boolean
-) {
-    constructor() : this("", "", "", "", false)
-}
+)

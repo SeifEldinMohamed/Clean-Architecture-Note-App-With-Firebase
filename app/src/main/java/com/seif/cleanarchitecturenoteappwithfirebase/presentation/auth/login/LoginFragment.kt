@@ -53,8 +53,8 @@ class LoginFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        val user = loginViewModel.getSession()
-        if (user != null) {
+        val currentFirebaseUser = loginViewModel.getCurrentUser()
+        if (currentFirebaseUser != null) {
             findNavController().navigate(R.id.action_loginFragment_to_noteListFragment)
         }
     }

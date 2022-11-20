@@ -1,13 +1,13 @@
 package com.seif.cleanarchitecturenoteappwithfirebase.domain.usecase
 
-import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.User
+import com.google.firebase.auth.FirebaseUser
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.repository.AuthRepository
 import javax.inject.Inject
 
-class GetSessionUseCase @Inject constructor(
+class GetFirebaseCurrentUserUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
-    operator fun invoke(): User? {
-        return authRepository.getSession()
+    operator fun invoke(): FirebaseUser? {
+        return authRepository.getFirebaseCurrentUser()
     }
 }

@@ -2,7 +2,6 @@ package com.seif.cleanarchitecturenoteappwithfirebase.di
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,11 +22,5 @@ object FirebaseModule {
     @Provides
     fun provideFirebaseAuthInstance(): FirebaseAuth {
         return FirebaseAuth.getInstance()
-    }
-
-    @Singleton
-    @Provides
-    fun provideGson(): Gson {
-        return Gson()
     }
 }
