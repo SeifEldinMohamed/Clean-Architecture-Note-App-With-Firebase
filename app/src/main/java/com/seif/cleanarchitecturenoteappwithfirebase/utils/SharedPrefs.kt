@@ -2,9 +2,11 @@ package com.seif.cleanarchitecturenoteappwithfirebase.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.annotation.Keep
 
 @Suppress("UNCHECKED_CAST")
-class SharedPrefs(private val context: Context) {
+@Keep
+class SharedPrefs(context: Context) {
     companion object {
         private const val PREF = "MyAppPrefName"
         private const val PREF_TOKEN = "user_token"

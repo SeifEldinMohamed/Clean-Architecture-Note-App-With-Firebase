@@ -2,6 +2,8 @@ package com.seif.cleanarchitecturenoteappwithfirebase.presentation.auth.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.User
+import com.seif.cleanarchitecturenoteappwithfirebase.domain.usecase.GetSessionUseCase
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.usecase.LoginUseCase
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: LoginUseCase,
+    private val getSessionUseCase: GetSessionUseCase
 ) : ViewModel() {
     private var _loginState = MutableStateFlow<LoginFragmentState>(LoginFragmentState.Init)
     val loginState: StateFlow<LoginFragmentState> = _loginState
@@ -51,4 +54,9 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
+    fun getSession(): User? {
+        return getSessionUseCase()
+    }
 }
+
+// use currentfirebase user to check if he is logged in or not and remove this fucking session

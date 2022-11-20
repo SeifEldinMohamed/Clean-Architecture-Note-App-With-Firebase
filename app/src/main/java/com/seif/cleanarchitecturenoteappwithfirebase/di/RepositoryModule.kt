@@ -1,7 +1,9 @@
 package com.seif.cleanarchitecturenoteappwithfirebase.di
 
+import android.content.SharedPreferences
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.gson.Gson
 import com.seif.cleanarchitecturenoteappwithfirebase.data.repository.AuthRepositoryImp
 import com.seif.cleanarchitecturenoteappwithfirebase.data.repository.NoteRepositoryImp
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.repository.AuthRepository
@@ -28,8 +30,10 @@ object RepositoryModule {
     @Singleton
     fun provideAuthRepository(
         firestore: FirebaseFirestore,
-        auth: FirebaseAuth
+        auth: FirebaseAuth,
+        sharedPreferences: SharedPreferences,
+        gson: Gson
     ): AuthRepository {
-        return AuthRepositoryImp(firestore, auth)
+        return AuthRepositoryImp(firestore, auth, sharedPreferences, gson)
     }
 }

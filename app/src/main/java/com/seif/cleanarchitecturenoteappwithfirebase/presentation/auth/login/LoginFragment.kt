@@ -51,6 +51,14 @@ class LoginFragment : Fragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        val user = loginViewModel.getSession()
+        if (user != null) {
+            findNavController().navigate(R.id.action_loginFragment_to_noteListFragment)
+        }
+    }
+
     private fun observe() {
         loginViewModel.loginState.flowWithLifecycle(lifecycle, Lifecycle.State.CREATED)
             .onEach {
