@@ -20,6 +20,7 @@ class NoteRepositoryImp @Inject constructor(
 ) : NoteRepository {
     override fun getNotes(userId: String) = callbackFlow<Resource<List<Note>, String>> {
 // whenever we use order by and whereEqualTo, we need to create index from firestore ( exception will give us link to direct us to firestore and make index
+        Log.d("Note Repository", "getNotes: user id = $userId")
         firestore.collection(Constants.NOTES_COLLECTION)
             .whereEqualTo(USER_ID, userId)
             .orderBy("date", Query.Direction.DESCENDING)
