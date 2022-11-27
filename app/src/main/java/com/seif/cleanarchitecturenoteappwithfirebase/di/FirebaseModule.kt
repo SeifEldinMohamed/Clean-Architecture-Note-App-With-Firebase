@@ -1,7 +1,11 @@
 package com.seif.cleanarchitecturenoteappwithfirebase.di
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.seif.cleanarchitecturenoteappwithfirebase.utils.Constants.Companion.FIREBASE_STORAGE_ROOT_DIRECTORY
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,5 +26,11 @@ object FirebaseModule {
     @Provides
     fun provideFirebaseAuthInstance(): FirebaseAuth {
         return FirebaseAuth.getInstance()
+    }
+
+    @Singleton
+    @Provides
+    fun provideFirebaseStorageInstance(): StorageReference {
+        return FirebaseStorage.getInstance().getReference(FIREBASE_STORAGE_ROOT_DIRECTORY)
     }
 }

@@ -2,6 +2,7 @@ package com.seif.cleanarchitecturenoteappwithfirebase.di
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.StorageReference
 import com.seif.cleanarchitecturenoteappwithfirebase.data.repository.AuthRepositoryImp
 import com.seif.cleanarchitecturenoteappwithfirebase.data.repository.NoteRepositoryImp
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.repository.AuthRepository
@@ -19,9 +20,10 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideNoteRepository(
-        firestore: FirebaseFirestore
+        firestore: FirebaseFirestore,
+        storageReference: StorageReference
     ): NoteRepository {
-        return NoteRepositoryImp(firestore)
+        return NoteRepositoryImp(firestore, storageReference)
     }
 
     @Provides

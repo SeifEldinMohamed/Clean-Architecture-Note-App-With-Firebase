@@ -1,8 +1,11 @@
 package com.seif.cleanarchitecturenoteappwithfirebase.data.repository
 
+import android.net.Uri
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
+import com.google.firebase.storage.StorageReference
 import com.seif.cleanarchitecturenoteappwithfirebase.data.mapper.toNote
 import com.seif.cleanarchitecturenoteappwithfirebase.data.mapper.toNoteDto
 import com.seif.cleanarchitecturenoteappwithfirebase.data.remote.dto.NoteDto
@@ -11,12 +14,18 @@ import com.seif.cleanarchitecturenoteappwithfirebase.domain.repository.NoteRepos
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Constants
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Constants.Companion.USER_ID
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Resource
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import java.lang.Exception
 import javax.inject.Inject
 
 class NoteRepositoryImp @Inject constructor(
-    private val firestore: FirebaseFirestore
+    private val firestore: FirebaseFirestore,
+    private val storageReference: StorageReference
 ) : NoteRepository {
     override fun getNotes(userId: String) = callbackFlow<Resource<List<Note>, String>> {
 // whenever we use order by and whereEqualTo, we need to create index from firestore ( exception will give us link to direct us to firestore and make index
@@ -81,6 +90,18 @@ class NoteRepositoryImp @Inject constructor(
                 trySend(Resource.Error(it.message.toString()))
             }
         awaitClose {}
+    }
+
+    override suspend fun uploadSingleImage(fileUri: Uri) = callbackFlow<Resource<Uri, String>> {
+        try {
+            val uri = withContext(Dispatchers.IO) {
+                storageReference.putFile(fileUri).await()
+                    .storage.downloadUrl.await()
+            }
+            trySend(Resource.Success(uri))
+        } catch (e: Exception) {
+            trySend(Resource.Error(e.message.toString()))
+        }
     }
 }
 
