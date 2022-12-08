@@ -9,7 +9,7 @@ import javax.inject.Inject
 class UploadSingleImageUseCase @Inject constructor(
     private val noteRepository: NoteRepository
 ) {
-    suspend operator fun invoke(fileUri: Uri): Flow<Resource<Uri,String>>{
+    suspend operator fun invoke(fileUri: Uri): Flow<Resource<Uri, String>> {
         return noteRepository.uploadSingleImage(fileUri)
     }
 }

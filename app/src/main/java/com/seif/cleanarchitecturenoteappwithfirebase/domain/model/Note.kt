@@ -12,5 +12,6 @@ data class Note(
     val userId: String,
     val title: String,
     val description: String,
-    val date: Date
+    val date: Date,
+    val images: List<String>
 ) : Parcelable
