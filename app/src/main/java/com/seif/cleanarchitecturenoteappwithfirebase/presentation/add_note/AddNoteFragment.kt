@@ -1,19 +1,27 @@
 package com.seif.cleanarchitecturenoteappwithfirebase.presentation.add_note
 
+import android.app.Activity
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.firebase.auth.FirebaseUser
 import com.seif.cleanarchitecturenoteappwithfirebase.databinding.FragmentAddNoteBinding
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
+import com.seif.cleanarchitecturenoteappwithfirebase.utils.hide
+import com.seif.cleanarchitecturenoteappwithfirebase.utils.show
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.showSnackBar
+import com.seif.cleanarchitecturenoteappwithfirebase.utils.toast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -25,6 +33,9 @@ class AddNoteFragment : Fragment() {
     private lateinit var binding: FragmentAddNoteBinding
     private val addNoteViewModel: AddNoteViewModel by viewModels()
     private var firebaseCurrentUser: FirebaseUser? = null
+    var imageUris: MutableList<Uri> = arrayListOf()
+    var objNote: Note? = null
+    private val uploadedImagesAdapter by lazy { UploadedImagesAdapter() }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -41,8 +52,44 @@ class AddNoteFragment : Fragment() {
 
         observe()
         binding.btnAddNote.setOnClickListener {
+            addNoteViewModel.uploadSingleImage(imageUris.first())
             val note = prepareNote()
             addNoteViewModel.addNote(note)
+        }
+        binding.rvUploadedImages.adapter = uploadedImagesAdapter
+
+        binding.ivUploadImage.setOnClickListener {
+            ImagePicker.with(this)
+                // .crop()
+                .compress(1024)
+                .galleryOnly()
+                .createIntent { intent ->
+                    startForProfileImageResult.launch(intent)
+                }
+        }
+    }
+
+    private val startForProfileImageResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+        val resultCode = result.resultCode
+        val data = result.data
+        when (resultCode) {
+            Activity.RESULT_OK -> {
+                val fileUri = data?.data!!
+                imageUris.add(fileUri)
+                uploadedImagesAdapter.updateImages(imageUris)
+                binding.progressBarAdd.hide()
+                binding.rvUploadedImages.show()
+                binding.ivUploadImage.hide()
+                binding.tvUploadImage.hide()
+            }
+            ImagePicker.RESULT_ERROR -> {
+                binding.progressBarAdd.hide()
+                toast(ImagePicker.getError(data))
+            }
+            else -> {
+                binding.progressBarAdd.hide()
+                Log.e(TAG, "Task Cancelled")
+            }
         }
     }
 
@@ -61,6 +108,9 @@ class AddNoteFragment : Fragment() {
                     is AddNoteFragmentState.NoteId -> {
                         binding.root.showSnackBar("note created with id: ${state.noteId}")
                         //  findNavController().navigate(R.id.action_addNoteFragment_to_noteListFragment)
+                    }
+                    is AddNoteFragmentState.ImageUploaded -> {
+                        toast("image uri = ${state.uri}")
                     }
                 }
             }.launchIn(lifecycleScope)
@@ -90,6 +140,16 @@ class AddNoteFragment : Fragment() {
             title = title,
             description = description,
             date = date,
+            images = getImageUrls()
         )
+    }
+
+    /** in usecase not here**/
+    private fun getImageUrls(): List<String> {
+        return if (imageUris.isNotEmpty()) {
+            imageUris.map { it.toString() }
+        } else {
+            objNote?.images ?: arrayListOf()
+        }
     }
 }
