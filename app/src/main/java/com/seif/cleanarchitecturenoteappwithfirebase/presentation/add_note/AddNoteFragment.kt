@@ -18,6 +18,8 @@ import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.firebase.auth.FirebaseUser
 import com.seif.cleanarchitecturenoteappwithfirebase.databinding.FragmentAddNoteBinding
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
+import com.seif.cleanarchitecturenoteappwithfirebase.presentation.add_note.adapter.OnImageItemClick
+import com.seif.cleanarchitecturenoteappwithfirebase.presentation.add_note.adapter.UploadedImagesAdapter
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.hide
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.show
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.showSnackBar
@@ -28,13 +30,12 @@ import kotlinx.coroutines.flow.onEach
 import java.util.Date
 
 @AndroidEntryPoint
-class AddNoteFragment : Fragment() {
+class AddNoteFragment : Fragment(), OnImageItemClick<Uri> {
     private val TAG = "AddNoteFragment"
     private lateinit var binding: FragmentAddNoteBinding
     private val addNoteViewModel: AddNoteViewModel by viewModels()
     private var firebaseCurrentUser: FirebaseUser? = null
     var imageUris: MutableList<Uri> = arrayListOf()
-    var objNote: Note? = null
     private val uploadedImagesAdapter by lazy { UploadedImagesAdapter() }
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,13 +51,14 @@ class AddNoteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         firebaseCurrentUser = addNoteViewModel.getFirebaseCurrentUser()
 
+        uploadedImagesAdapter.onImageItemClick = this
+
         observe()
         binding.btnAddNote.setOnClickListener {
             // addNoteViewModel.uploadMultipleImages(imageUris)
             val note = prepareNote()
             addNoteViewModel.addNote(note)
         }
-        binding.rvUploadedImages.adapter = uploadedImagesAdapter
 
         binding.ivUploadImage.setOnClickListener {
             ImagePicker.with(this)
@@ -64,9 +66,11 @@ class AddNoteFragment : Fragment() {
                 .compress(1024)
                 .galleryOnly()
                 .createIntent { intent ->
+                    binding.progressBarAdd.show()
                     startForProfileImageResult.launch(intent)
                 }
         }
+        binding.rvUploadedImages.adapter = uploadedImagesAdapter
     }
 
     private val startForProfileImageResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
@@ -74,9 +78,9 @@ class AddNoteFragment : Fragment() {
         val data = result.data
         when (resultCode) {
             Activity.RESULT_OK -> {
-                val fileUri = data?.data!!
-                imageUris.add(fileUri)
-                uploadedImagesAdapter.updateImages(imageUris)
+                val imageUri = data?.data!!
+                imageUris.add(imageUri)
+                uploadedImagesAdapter.updateList(imageUris)
                 binding.progressBarAdd.hide()
                 binding.rvUploadedImages.show()
                 binding.tvNoImagesYet.hide()
@@ -116,7 +120,6 @@ class AddNoteFragment : Fragment() {
                     }
                     is AddNoteFragmentState.ImagesUploaded -> {
                         toast("images uri = ${state.imagesUri}")
-                        // when image uploaded successfully on storage then prepare note to upload it on fireStore
                     }
                 }
             }.launchIn(lifecycleScope)
@@ -148,5 +151,12 @@ class AddNoteFragment : Fragment() {
             date = date,
             images = imageUris
         )
+    }
+
+    override fun onRemoveImageItemClick(item: Uri, position: Int) {
+        Log.d(TAG, "onRemoveImageItemClick: size: ${imageUris.size}")
+        Log.d(TAG, "onRemoveImageItemClick: size: $position")
+        imageUris.removeAt(position)
+        uploadedImagesAdapter.updateList(imageUris)
     }
 }

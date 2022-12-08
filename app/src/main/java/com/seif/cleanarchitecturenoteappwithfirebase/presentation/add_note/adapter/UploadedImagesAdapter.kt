@@ -1,5 +1,6 @@
-package com.seif.cleanarchitecturenoteappwithfirebase.presentation.add_note
+package com.seif.cleanarchitecturenoteappwithfirebase.presentation.add_note.adapter
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,11 +9,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.seif.cleanarchitecturenoteappwithfirebase.databinding.ItemUploadedImageBinding
 
 class UploadedImagesAdapter : RecyclerView.Adapter<UploadedImagesAdapter.MyViewHolder>() {
-    private var images = emptyList<Uri>()
-    class MyViewHolder(private val binding: ItemUploadedImageBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(image: Uri) {
+    var onImageItemClick: OnImageItemClick<Uri>? = null
+    var images: List<Uri> = emptyList()
+    inner class MyViewHolder(private val binding: ItemUploadedImageBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(image: Uri, position: Int) {
             binding.ivNoteImage.setImageURI(image)
             Log.d("adapter", "bind: image uri $image")
+            binding.ivRemoveImage.setOnClickListener {
+                Log.d("adapter", "remove clicked")
+                onImageItemClick?.onRemoveImageItemClick(image, position)
+            }
         }
     }
 
@@ -27,12 +33,14 @@ class UploadedImagesAdapter : RecyclerView.Adapter<UploadedImagesAdapter.MyViewH
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(images[position])
+        holder.bind(images[position], position)
     }
 
-    override fun getItemCount() = images.size
-
-    fun updateImages(newImages: List<Uri>) {
+    override fun getItemCount(): Int {
+        return images.size
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateList(newImages: List<Uri>) {
         this.images = newImages
         notifyDataSetChanged()
     }
