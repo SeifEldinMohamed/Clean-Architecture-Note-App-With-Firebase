@@ -11,7 +11,8 @@ fun NoteDto.toNote(): Note {
         userId = this.userId,
         title = this.title,
         description = this.description,
-        date = this.date
+        date = this.date,
+        images = this.images
     )
 }
 
@@ -21,7 +22,8 @@ fun Note.toNoteDto(): NoteDto {
         userId = this.userId,
         title = this.title,
         description = this.description,
-        date = this.date
+        date = this.date,
+        images = this.images
     )
 }
 
@@ -31,7 +33,7 @@ fun UserDto.toUser(): User {
         username = this.username,
         email = this.email,
         password = this.password,
-        subscribed = this.subscribed
+        subscribed = this.subscribed,
     )
 }
 
