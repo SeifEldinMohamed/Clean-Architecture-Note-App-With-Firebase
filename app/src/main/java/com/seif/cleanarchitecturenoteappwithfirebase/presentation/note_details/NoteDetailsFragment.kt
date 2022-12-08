@@ -1,5 +1,6 @@
 package com.seif.cleanarchitecturenoteappwithfirebase.presentation.note_details
 
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -7,7 +8,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -17,7 +17,8 @@ import androidx.navigation.fragment.navArgs
 import com.google.firebase.auth.FirebaseUser
 import com.seif.cleanarchitecturenoteappwithfirebase.databinding.FragmentNoteDetailsBinding
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
-import com.seif.cleanarchitecturenoteappwithfirebase.presentation.add_note.UploadedImagesAdapter
+import com.seif.cleanarchitecturenoteappwithfirebase.presentation.add_note.adapter.OnImageItemClick
+import com.seif.cleanarchitecturenoteappwithfirebase.presentation.add_note.adapter.UploadedImagesAdapter
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.hide
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.show
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.showSnackBar
@@ -27,7 +28,7 @@ import kotlinx.coroutines.flow.onEach
 import java.util.Date
 
 @AndroidEntryPoint
-class NoteDetailsFragment : Fragment() {
+class NoteDetailsFragment : Fragment(), OnImageItemClick<Uri> {
     private val TAG = "NoteDetailsFragment"
     lateinit var binding: FragmentNoteDetailsBinding
     private val noteDetailsViewModel: NoteDetailsViewModel by viewModels()
@@ -36,6 +37,7 @@ class NoteDetailsFragment : Fragment() {
     val args: NoteDetailsFragmentArgs by navArgs()
     private val uploadedImagesAdapter: UploadedImagesAdapter by lazy { UploadedImagesAdapter() }
     private lateinit var note: Note
+    private lateinit var imagesUri: MutableList<Uri>
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,6 +50,8 @@ class NoteDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         firebaseCurrentUser = noteDetailsViewModel.getFirebaseCurrentUser()
+
+        uploadedImagesAdapter.onImageItemClick = this
 
         updateUi()
         checkNoteUpdated()
@@ -136,7 +140,7 @@ class NoteDetailsFragment : Fragment() {
             title = title,
             description = description,
             date = date,
-            images = note.images
+            images = imagesUri
         )
     }
 
@@ -144,6 +148,7 @@ class NoteDetailsFragment : Fragment() {
         Log.d(TAG, "updateUi: update ui....")
 
         note = args.note
+        imagesUri = note.images.toMutableList()
         when (args.type) {
             "view" -> {
                 binding.btnUpdateNote.hide()
@@ -155,7 +160,14 @@ class NoteDetailsFragment : Fragment() {
         binding.etTitleDetails.setText(note.title)
         binding.etDescriptionDetails.setText(note.description)
 
-        uploadedImagesAdapter.updateImages(note.images)
         binding.rvNoteImages.adapter = uploadedImagesAdapter
+        uploadedImagesAdapter.updateList(note.images)
+    }
+
+    override fun onRemoveImageItemClick(item: Uri, position: Int) {
+        Log.d(TAG, "onRemoveImageItemClick: remove index $position")
+
+        imagesUri.removeAt(position)
+        uploadedImagesAdapter.updateList(imagesUri)
     }
 }

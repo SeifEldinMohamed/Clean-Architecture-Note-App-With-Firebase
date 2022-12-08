@@ -15,7 +15,7 @@ import com.seif.cleanarchitecturenoteappwithfirebase.R
 import com.seif.cleanarchitecturenoteappwithfirebase.databinding.FragmentNoteListBinding
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
 import com.seif.cleanarchitecturenoteappwithfirebase.presentation.note_list.adapter.NoteListAdapter
-import com.seif.cleanarchitecturenoteappwithfirebase.utils.OnItemClickRecyclerView
+import com.seif.cleanarchitecturenoteappwithfirebase.presentation.note_list.adapter.OnNoteItemClick
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.SharedPrefs
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
+class NoteListFragment : Fragment(), OnNoteItemClick<Note> {
     private val TAG = "NoteListFragment"
     private lateinit var binding: FragmentNoteListBinding
     private val noteListViewModel: NoteListViewModel by viewModels()
@@ -50,7 +50,8 @@ class NoteListFragment : Fragment(), OnItemClickRecyclerView<Note> {
 
         firebaseCurrentUser = noteListViewModel.getFirebaseCurrentUser()
 
-        noteListAdapter.onItemClickRecyclerView = this
+        noteListAdapter.onNoteItemClick = this
+
         if (sharedPrefs.get("firstTime", Boolean::class.java)) {
             firebaseCurrentUser?.let { currentUser ->
                 noteListViewModel.getNotes(currentUser.uid) // we will make it at first time only
