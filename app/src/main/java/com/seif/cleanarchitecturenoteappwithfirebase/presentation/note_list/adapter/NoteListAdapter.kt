@@ -7,13 +7,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.seif.cleanarchitecturenoteappwithfirebase.databinding.ItemNoteBinding
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
-import com.seif.cleanarchitecturenoteappwithfirebase.utils.OnItemClickRecyclerView
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.formatDate
-import java.util.*
 
 class NoteListAdapter : ListAdapter<Note, NoteListAdapter.MyViewHolder>(Companion) {
     //    private var notes: List<Note> = emptyList()
-    var onItemClickRecyclerView: OnItemClickRecyclerView<Note>? = null
+    var onNoteItemClick: OnNoteItemClick<Note>? = null
 
     companion object : DiffUtil.ItemCallback<Note>() {
         override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean {
@@ -33,13 +31,13 @@ class NoteListAdapter : ListAdapter<Note, NoteListAdapter.MyViewHolder>(Companio
             binding.tvDate.text = note.date.formatDate()
 
             binding.clNote.setOnClickListener {
-                onItemClickRecyclerView?.onNoteItemClick(note)
+                onNoteItemClick?.onNoteItemClick(note)
             }
             binding.ivEdit.setOnClickListener {
-                onItemClickRecyclerView?.onEditItemClick(note)
+                onNoteItemClick?.onEditItemClick(note)
             }
             binding.ivDelete.setOnClickListener {
-                onItemClickRecyclerView?.onDeleteItemClick(note, position)
+                onNoteItemClick?.onDeleteItemClick(note, position)
             }
         }
     }
