@@ -3,7 +3,6 @@ package com.seif.cleanarchitecturenoteappwithfirebase.data.repository
 import android.net.Uri
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.StorageReference
 import com.seif.cleanarchitecturenoteappwithfirebase.data.mapper.toNote
@@ -16,8 +15,8 @@ import com.seif.cleanarchitecturenoteappwithfirebase.utils.Constants.Companion.U
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.lang.Exception
@@ -92,15 +91,15 @@ class NoteRepositoryImp @Inject constructor(
         awaitClose {}
     }
 
-    override suspend fun uploadSingleImage(fileUri: Uri) = callbackFlow<Resource<Uri, String>> {
+    override suspend fun uploadSingleImage(fileUri: Uri) = flow {
         try {
             val uri = withContext(Dispatchers.IO) {
-                storageReference.putFile(fileUri).await()
-                    .storage.downloadUrl.await()
+                storageReference.putFile(fileUri).await() // will upload image and then wait unitl it uploaded to firebase storage
+                    .storage.downloadUrl.await() // then we download what we are getting from storage we downloaded it
             }
-            trySend(Resource.Success(uri))
+            emit(Resource.Success(uri))
         } catch (e: Exception) {
-            trySend(Resource.Error(e.message.toString()))
+            emit(Resource.Error(e.message.toString()))
         }
     }
 }
