@@ -16,14 +16,15 @@
         android:layout_marginEnd="20dp"
         android:background="#F1F1F1"
         android:elevation="6dp"
-        android:hint="title"
+        android:hint="@string/title"
         android:inputType="textPersonName"
         android:padding="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="TextContrastCheck" />
+        tools:ignore="TextContrastCheck"
+        android:autofillHints="" />
 
 
     <EditText
@@ -36,14 +37,15 @@
         android:background="#F1F1F1"
         android:elevation="6dp"
         android:gravity="start|top"
-        android:hint="description"
+        android:hint="@string/description"
         android:inputType="textMultiLine"
         android:padding="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_title_details"
-        tools:ignore="TextContrastCheck" />
+        tools:ignore="TextContrastCheck"
+        android:autofillHints="" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/materialCardView"
@@ -71,14 +73,15 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_file_upload" />
+                app:srcCompat="@drawable/ic_file_upload"
+                android:contentDescription="@string/uploaded_image" />
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/tv_upload_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="upload image"
+                android:text="@string/upload_image"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -90,10 +93,13 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:visibility="gone"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:listitem="@layout/item_uploaded_image" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>

@@ -133,7 +133,8 @@ class NoteDetailsFragment : Fragment() {
             userId = firebaseCurrentUser?.uid.toString(),
             title = title,
             description = description,
-            date = date
+            date = date,
+            images = note.images
         )
     }
 

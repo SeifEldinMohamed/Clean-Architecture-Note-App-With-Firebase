@@ -25,4 +25,5 @@
     <string name="logout_fab_image_description">logout fab image description</string>
     <string name="cancel_uploaded_image">cancel uploaded image</string>
     <string name="uploaded_image">uploaded image</string>
+    <string name="upload_image">Upload Image</string>
 </resources>
