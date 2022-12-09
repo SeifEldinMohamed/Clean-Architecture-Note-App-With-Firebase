@@ -17,6 +17,7 @@ import androidx.navigation.fragment.navArgs
 import com.google.firebase.auth.FirebaseUser
 import com.seif.cleanarchitecturenoteappwithfirebase.databinding.FragmentNoteDetailsBinding
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
+import com.seif.cleanarchitecturenoteappwithfirebase.presentation.add_note.UploadedImagesAdapter
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.hide
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.show
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.showSnackBar
@@ -33,6 +34,7 @@ class NoteDetailsFragment : Fragment() {
     private var firebaseCurrentUser: FirebaseUser? = null
     // save userId in shared preference and use it in whole app better than calling for id from firebase
     val args: NoteDetailsFragmentArgs by navArgs()
+    private val uploadedImagesAdapter: UploadedImagesAdapter by lazy { UploadedImagesAdapter() }
     private lateinit var note: Note
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -152,5 +154,8 @@ class NoteDetailsFragment : Fragment() {
         }
         binding.etTitleDetails.setText(note.title)
         binding.etDescriptionDetails.setText(note.description)
+
+        uploadedImagesAdapter.updateImages(note.images)
+        binding.rvNoteImages.adapter = uploadedImagesAdapter
     }
 }
