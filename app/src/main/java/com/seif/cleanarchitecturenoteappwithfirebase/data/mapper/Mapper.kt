@@ -1,5 +1,6 @@
 package com.seif.cleanarchitecturenoteappwithfirebase.data.mapper
 
+import androidx.core.net.toUri
 import com.seif.cleanarchitecturenoteappwithfirebase.data.remote.dto.NoteDto
 import com.seif.cleanarchitecturenoteappwithfirebase.data.remote.dto.UserDto
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
@@ -12,7 +13,7 @@ fun NoteDto.toNote(): Note {
         title = this.title,
         description = this.description,
         date = this.date,
-        images = this.images
+        images = this.images.map { it.toUri() }
     )
 }
 
@@ -23,7 +24,7 @@ fun Note.toNoteDto(): NoteDto {
         title = this.title,
         description = this.description,
         date = this.date,
-        images = this.images
+        images = this.images.map { it.toString() }
     )
 }
 

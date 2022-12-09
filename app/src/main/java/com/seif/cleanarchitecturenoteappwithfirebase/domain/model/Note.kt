@@ -1,5 +1,6 @@
 package com.seif.cleanarchitecturenoteappwithfirebase.domain.model
 
+import android.net.Uri
 import android.os.Parcelable
 import androidx.annotation.Keep
 import kotlinx.parcelize.Parcelize
@@ -13,5 +14,5 @@ data class Note(
     val title: String,
     val description: String,
     val date: Date,
-    val images: List<String>
+    val images: List<Uri>
 ) : Parcelable
