@@ -7,8 +7,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {
     fun getNotes(userId: String): Flow<Resource<List<Note>, String>>
-    fun addNote(note: Note): Flow<Resource<String, String>>
+    suspend fun addNote(note: Note): Resource<String, String>
     fun updateNote(note: Note): Flow<Resource<String, String>>
     fun deleteNote(note: Note): Flow<Resource<String, String>>
-    suspend fun uploadSingleImage(fileUri: Uri): Flow<Resource<Uri, String>>
+    suspend fun uploadSingleImage(imageUri: Uri): Flow<Resource<Uri, String>>
+    suspend fun uploadMultipleImages(imagesUri: List<Uri>): Resource<List<Uri>, String>
 }

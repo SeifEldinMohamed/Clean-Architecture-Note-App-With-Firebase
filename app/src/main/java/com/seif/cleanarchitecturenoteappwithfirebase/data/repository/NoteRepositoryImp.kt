@@ -14,6 +14,8 @@ import com.seif.cleanarchitecturenoteappwithfirebase.utils.Constants
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Constants.Companion.USER_ID
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Resource
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
@@ -54,17 +56,22 @@ class NoteRepositoryImp @Inject constructor(
         awaitClose {}
     }
 
-    override fun addNote(note: Note) = callbackFlow<Resource<String, String>> {
-        val document = firestore.collection(Constants.NOTES_COLLECTION).document()
-        note.id = document.id
-        document.set(note.toNoteDto())
-            .addOnSuccessListener {
-                trySend(Resource.Success("Note Added Successfully with id : ${document.id}"))
+    override suspend fun addNote(note: Note): Resource<String, String> {
+        return when (val result = uploadMultipleImages(note.images)) {
+            is Resource.Error -> {
+                Resource.Error(result.message)
             }
-            .addOnFailureListener {
-                trySend(Resource.Error(it.message.toString()))
+            is Resource.Success -> {
+                try {
+                    val document = firestore.collection(Constants.NOTES_COLLECTION).document()
+                    note.id = document.id
+                    document.set(note.toNoteDto()).await()
+                    Resource.Success("Note Added Successfully with id : ${document.id}")
+                } catch (e: Exception) {
+                    Resource.Error(e.message.toString())
+                }
             }
-        awaitClose {}
+        }
     }
 
     override fun updateNote(note: Note) = callbackFlow<Resource<String, String>> {
@@ -91,15 +98,40 @@ class NoteRepositoryImp @Inject constructor(
         awaitClose {}
     }
 
-    override suspend fun uploadSingleImage(fileUri: Uri) = flow {
+    override suspend fun uploadSingleImage(imageUri: Uri) = flow {
         try {
             val uri = withContext(Dispatchers.IO) {
-                storageReference.putFile(fileUri).await() // will upload image and then wait unitl it uploaded to firebase storage
+                storageReference.putFile(imageUri)
+                    .await() // will upload image and then wait unitl it uploaded to firebase storage
                     .storage.downloadUrl.await() // then we download what we are getting from storage we downloaded it
             }
             emit(Resource.Success(uri))
         } catch (e: Exception) {
             emit(Resource.Error(e.message.toString()))
+        }
+    }
+
+    override suspend fun uploadMultipleImages(imagesUri: List<Uri>): Resource<List<Uri>, String> {
+        return try {
+            val uri: List<Uri> = withContext(Dispatchers.IO) {
+                // 1,2,3,4
+                // 4 async blocks (upload first then download it's url then upload second ....)
+                imagesUri.map { imageUri -> // we will map the whole list into the async blocks
+                    async {
+                        storageReference.child(
+                            imageUri.lastPathSegment ?: "${System.currentTimeMillis()}"
+                        )
+                            .putFile(imageUri)
+                            .await()
+                            .storage
+                            .downloadUrl
+                            .await()
+                    }
+                }.awaitAll()
+            }
+            Resource.Success(uri)
+        } catch (e: Exception) {
+            Resource.Error(e.message.toString())
         }
     }
 }

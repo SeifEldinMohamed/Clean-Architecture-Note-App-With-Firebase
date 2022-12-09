@@ -98,6 +98,8 @@ fun Note.validNote(): Resource<String, String> {
         Resource.Error("description is too short min char = 20")
     } else if (note.description.length > 200) { // to long ""
         Resource.Error("description is too long max char = 200")
+    } else if (note.images.isEmpty()) { // to long ""
+        Resource.Error("you have to upload at least one image !")
     } else {
         Resource.Success("valid note")
     }
