@@ -52,7 +52,7 @@ class AddNoteFragment : Fragment() {
 
         observe()
         binding.btnAddNote.setOnClickListener {
-            addNoteViewModel.uploadSingleImage(imageUris.first())
+            // addNoteViewModel.uploadMultipleImages(imageUris)
             val note = prepareNote()
             addNoteViewModel.addNote(note)
         }
@@ -79,8 +79,7 @@ class AddNoteFragment : Fragment() {
                 uploadedImagesAdapter.updateImages(imageUris)
                 binding.progressBarAdd.hide()
                 binding.rvUploadedImages.show()
-                binding.ivUploadImage.hide()
-                binding.tvUploadImage.hide()
+                binding.tvNoImagesYet.hide()
             }
             ImagePicker.RESULT_ERROR -> {
                 binding.progressBarAdd.hide()
@@ -111,6 +110,13 @@ class AddNoteFragment : Fragment() {
                     }
                     is AddNoteFragmentState.ImageUploaded -> {
                         toast("image uri = ${state.uri}")
+                        // when image uploaded successfully on storage then prepare note to upload it on fireStore
+//                        val note = prepareNote()
+//                        addNoteViewModel.addNote(note)
+                    }
+                    is AddNoteFragmentState.ImagesUploaded -> {
+                        toast("images uri = ${state.imagesUri}")
+                        // when image uploaded successfully on storage then prepare note to upload it on fireStore
                     }
                 }
             }.launchIn(lifecycleScope)
@@ -140,16 +146,7 @@ class AddNoteFragment : Fragment() {
             title = title,
             description = description,
             date = date,
-            images = getImageUrls()
+            images = imageUris
         )
-    }
-
-    /** in usecase not here**/
-    private fun getImageUrls(): List<String> {
-        return if (imageUris.isNotEmpty()) {
-            imageUris.map { it.toString() }
-        } else {
-            objNote?.images ?: arrayListOf()
-        }
     }
 }

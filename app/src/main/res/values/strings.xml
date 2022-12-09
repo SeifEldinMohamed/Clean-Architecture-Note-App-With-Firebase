@@ -26,4 +26,6 @@
     <string name="cancel_uploaded_image">cancel uploaded image</string>
     <string name="uploaded_image">uploaded image</string>
     <string name="upload_image">Upload Image</string>
+    <string name="no_images_yet">No Images Yet</string>
+    <string name="upload_images">Upload Images</string>
 </resources>

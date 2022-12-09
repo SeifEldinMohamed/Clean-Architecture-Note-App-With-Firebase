@@ -8,4 +8,5 @@ sealed class AddNoteFragmentState {
     data class ShowError(val message: String) : AddNoteFragmentState()
     data class NoteId(val noteId: String) : AddNoteFragmentState()
     data class ImageUploaded(val uri: Uri) : AddNoteFragmentState()
+    data class ImagesUploaded(val imagesUri: List<Uri>) : AddNoteFragmentState()
 }

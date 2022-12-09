@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.Note
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.usecase.AddNoteUseCase
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.usecase.GetFirebaseCurrentUserUseCase
+import com.seif.cleanarchitecturenoteappwithfirebase.domain.usecase.UploadMultipleImagesUseCase
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.usecase.UploadSingleImageUseCase
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +23,8 @@ import javax.inject.Inject
 class AddNoteViewModel @Inject constructor(
     private val addNoteUseCase: AddNoteUseCase,
     private val getFirebaseCurrentUserUseCase: GetFirebaseCurrentUserUseCase,
-    private val uploadSingleImageUseCase: UploadSingleImageUseCase
+    private val uploadSingleImageUseCase: UploadSingleImageUseCase,
+    private val uploadMultipleImagesUseCase: UploadMultipleImagesUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<AddNoteFragmentState>(AddNoteFragmentState.Init)
@@ -42,23 +44,20 @@ class AddNoteViewModel @Inject constructor(
     fun addNote(note: Note) {
         setLoading(true)
         viewModelScope.launch(Dispatchers.IO) {
-            addNoteUseCase(note)
-                .collect {
-                    when (it) {
-                        is Resource.Error -> {
-                            withContext(Dispatchers.Main) {
-                                setLoading(false)
-                                showError(it.message)
-                            }
-                        }
-                        is Resource.Success -> {
-                            withContext(Dispatchers.Main) {
-                                setLoading(false)
-                                _state.value = AddNoteFragmentState.NoteId(it.data)
-                            }
-                        }
+            when (val result = addNoteUseCase(note)) {
+                is Resource.Error -> {
+                    withContext(Dispatchers.Main) {
+                        setLoading(false)
+                        showError(result.message)
                     }
                 }
+                is Resource.Success -> {
+                    withContext(Dispatchers.Main) {
+                        setLoading(false)
+                        _state.value = AddNoteFragmentState.NoteId(result.data)
+                    }
+                }
+            }
         }
     }
 
@@ -82,6 +81,26 @@ class AddNoteViewModel @Inject constructor(
                             setLoading(false)
                             showError(it.message)
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    fun uploadMultipleImages(imagesUri: List<Uri>) {
+        setLoading(true)
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val result = uploadMultipleImagesUseCase(imagesUri)) {
+                is Resource.Success -> {
+                    withContext(Dispatchers.Main) {
+                        setLoading(false)
+                        _state.value = AddNoteFragmentState.ImagesUploaded(result.data)
+                    }
+                }
+                is Resource.Error -> {
+                    withContext(Dispatchers.Main) {
+                        setLoading(false)
+                        showError(result.message)
                     }
                 }
             }
