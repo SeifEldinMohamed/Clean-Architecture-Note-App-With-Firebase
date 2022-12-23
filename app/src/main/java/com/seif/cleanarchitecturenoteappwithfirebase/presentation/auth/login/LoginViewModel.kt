@@ -2,6 +2,7 @@ package com.seif.cleanarchitecturenoteappwithfirebase.presentation.auth.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseUser
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.usecase.GetFirebaseCurrentUserUseCase
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.usecase.LoginUseCase
@@ -58,4 +59,5 @@ class LoginViewModel @Inject constructor(
     fun getCurrentUser(): FirebaseUser? {
         return getFirebaseCurrentUserUseCase()
     }
+
 }

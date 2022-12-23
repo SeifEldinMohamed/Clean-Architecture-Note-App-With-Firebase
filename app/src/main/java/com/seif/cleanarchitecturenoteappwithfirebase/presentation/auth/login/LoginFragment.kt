@@ -1,16 +1,25 @@
 package com.seif.cleanarchitecturenoteappwithfirebase.presentation.auth.login
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.GoogleAuthProvider
 import com.seif.cleanarchitecturenoteappwithfirebase.R
 import com.seif.cleanarchitecturenoteappwithfirebase.databinding.FragmentLoginBinding
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.hide
@@ -26,6 +35,7 @@ class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
     private val loginViewModel: LoginViewModel by viewModels()
     private val TAG = "loginFragment"
+    private lateinit var googleSignInClient : GoogleSignInClient
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -87,4 +97,35 @@ class LoginFragment : Fragment() {
         val password: String = binding.etPassword.text.toString()
         loginViewModel.loginUser(email, password)
     }
+
+//    private fun signInGoogle(){
+//        val signInIntent = googleSignInClient.signInIntent
+//        launcher.launch(signInIntent)
+//    }
+//
+//    private val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+//            result ->
+//        if (result.resultCode == Activity.RESULT_OK){
+//
+//            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+//            handleResults(task)
+//        }
+//    }
+//
+//    private fun handleResults(task: Task<GoogleSignInAccount>) {
+//        if (task.isSuccessful){
+//            val account : GoogleSignInAccount? = task.result
+//            if (account != null){
+//                updateUI(account)
+//            }
+//        }else{
+//            Toast.makeText(requireContext(), task.exception.toString() , Toast.LENGTH_SHORT).show()
+//        }
+//    }
+//
+//    private fun updateUI(account: GoogleSignInAccount) {
+//        val credential = GoogleAuthProvider.getCredential(account.idToken , null)
+//        loginViewModel.signInWithGoogle(credential)
+//    }
+
 }
