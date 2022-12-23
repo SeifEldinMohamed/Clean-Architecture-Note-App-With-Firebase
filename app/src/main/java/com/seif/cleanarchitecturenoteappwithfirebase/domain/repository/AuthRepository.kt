@@ -1,5 +1,6 @@
 package com.seif.cleanarchitecturenoteappwithfirebase.domain.repository
 
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseUser
 import com.seif.cleanarchitecturenoteappwithfirebase.domain.model.User
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Resource

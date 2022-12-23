@@ -1,6 +1,7 @@
 package com.seif.cleanarchitecturenoteappwithfirebase.data.repository
 
 import android.util.Log
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
@@ -11,6 +12,8 @@ import com.seif.cleanarchitecturenoteappwithfirebase.utils.Constants.Companion.U
 import com.seif.cleanarchitecturenoteappwithfirebase.utils.Resource
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.tasks.await
+import java.lang.Exception
 import javax.inject.Inject
 
 class AuthRepositoryImp @Inject constructor(
